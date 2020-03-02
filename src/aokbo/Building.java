@@ -9,14 +9,12 @@ package aokbo;
  *
  * @author Oytun
  */
-public class Building {
+public class Building extends baseGameItem{
 
-    private baseGameItem baseUnit;
-    int flag;
+    //public baseGameItem baseUnit;
 
-    public Building(int food, int wood, int gold, int stone, int age, int time, int reqBarrackFlag) {
-        baseUnit = new baseGameItem(food, wood, gold, stone, age, time);
-        this.flag = reqBarrackFlag;
+    public Building(int food, int wood, int gold, int stone, int age, int time) {
+        super(food, wood, gold, stone, age, time);
     }
 
 }

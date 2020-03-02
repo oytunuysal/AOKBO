@@ -9,20 +9,20 @@ package aokbo;
  *
  * @author Oytun
  */
-public class Research {
+public class Research extends baseGameItem{
 
-    private baseGameItem baseUnit;
+    //public baseGameItem baseUnit;
 
-    Research preResearch;
-    int availableFlag = 1;
+   // Research preResearch;
+   // int availableFlag = 1;
 
     public Research(int food, int wood, int gold, int stone, int age, int time) {
-        baseUnit = new baseGameItem(food, wood, gold, stone, age, time);
+        super(food, wood, gold, stone, age, time);
     }
 
-    public void addPreResearch(Research preResearch) {
-        this.preResearch = preResearch;
-        availableFlag = 0;
-    }
+   // public void addPreResearch(Research preResearch) {
+    //    this.preResearch = preResearch;
+   //     availableFlag = 0;
+   // }
 
 }

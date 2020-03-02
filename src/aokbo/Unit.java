@@ -9,12 +9,12 @@ package aokbo;
  *
  * @author Oytun
  */
-public class Unit {
+public class Unit extends baseGameItem{
 
-    public baseGameItem baseUnit;
+    //public baseGameItem baseUnit;
 
     public Unit(int food, int wood, int gold, int age, int time) {
-        baseUnit = new baseGameItem(food, wood, 0, gold, age, time);
+        super(food, wood, 0, gold, age, time);
     }
 
 }
