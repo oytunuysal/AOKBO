@@ -16,8 +16,8 @@ public class Research extends baseGameItem{
    // Research preResearch;
    // int availableFlag = 1;
 
-    public Research(int food, int wood, int gold, int stone, int age, int time) {
-        super(food, wood, gold, stone, age, time);
+    public Research(String name, int food, int wood, int gold, int stone, int age, int time) {
+        super(name, food, wood, gold, stone, age, time);
     }
 
    // public void addPreResearch(Research preResearch) {

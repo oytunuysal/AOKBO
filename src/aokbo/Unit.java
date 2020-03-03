@@ -13,8 +13,8 @@ public class Unit extends baseGameItem{
 
     //public baseGameItem baseUnit;
 
-    public Unit(int food, int wood, int gold, int age, int time) {
-        super(food, wood, 0, gold, age, time);
+    public Unit(String name, int food, int wood, int gold, int age, int time) {
+        super(name, food, wood, 0, gold, age, time);
     }
 
 }

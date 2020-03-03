@@ -13,11 +13,13 @@ import java.util.ArrayList;
  */
 public class baseGameItem {
 
+    String name;
     int requiredFood, requiredWood, requiredGold, requiredStone, requiredAge;
     int creationTime;
-    ArrayList<baseGameItem> preResearchs = new ArrayList<>();
+    ArrayList<baseGameItem> preRequisites = new ArrayList<>();
 
-    public baseGameItem(int requiredFood, int requiredWood, int requiredGold, int requiredStone, int requiredAge, int creationTime) {
+    public baseGameItem(String name, int requiredFood, int requiredWood, int requiredGold, int requiredStone, int requiredAge, int creationTime) {
+        this.name = name;
         this.creationTime = creationTime;
         this.requiredAge = requiredAge;
         this.requiredFood = requiredFood;
@@ -26,8 +28,19 @@ public class baseGameItem {
         this.requiredWood = requiredWood;
     }
 
-    public void addPreResearchs(baseGameItem preResearch) {
-        this.preResearchs.add(preResearch);
+    public void addPreRequisites(baseGameItem preRequisite) {
+        this.preRequisites.add(preRequisite);
+    }
+
+    public void listPrerequisiteNames() {
+        int i;
+        for (i = 0; i < preRequisites.size(); i++) {
+            System.out.println('-' + preRequisites.get(i).name);
+        }
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setCreationTime(int creationTime) {

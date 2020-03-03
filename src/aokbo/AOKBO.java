@@ -5,6 +5,8 @@
  */
 package aokbo;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Oytun
@@ -15,32 +17,80 @@ public class AOKBO {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Research DarkAgeResearch = new Research(500, 0, 0, 0, 0, 0);
-        Building Mill = new Building(0, 100, 0, 0, 0, 35);
-        Building TownCenter = new Building(0, 275, 0, 100, 2, 150);
-        Research Loom = new Research(0, 0, 50, 0, 0, 25);
-        Building Barracks = new Building(0, 175, 0, 0, 0, 50);
-        Building Blacksmith = new Building(0, 150, 0, 0, 1, 40);
-        Research Fletching = new Research(100, 0, 50, 0, 1, 30);
-        Building Market = new Building(0, 175, 0, 0, 1, 60);
-        Research FedualAgeResearch = new Research(500, 0, 0, 0, 0, 130);
-        Market.addPreResearchs(Mill);
-        Market.addPreResearchs(FedualAgeResearch);
-        Building ArcheryRange = new Building(0, 175, 0, 0, 1, 50);
-        ArcheryRange.addPreResearchs(FedualAgeResearch);
-        ArcheryRange.addPreResearchs(Barracks);
-        Research CastleAgeResearch = new Research(800, 0, 200, 0, 1, 160);
-        CastleAgeResearch.addPreResearchs(FedualAgeResearch);
-        Research BodkinArrow = new Research(200, 0, 100, 0, 0, 35);
-        BodkinArrow.addPreResearchs(CastleAgeResearch);
-        BodkinArrow.addPreResearchs(Fletching);
-        Building SiegeWorkshop = new Building(0, 200, 0, 0, 2, 40);
-        SiegeWorkshop.addPreResearchs(CastleAgeResearch);
-        SiegeWorkshop.addPreResearchs(Blacksmith);
-        //CastleAgeResearch.addPreResearchs(Building);
-        //CastleAgeResearch.addPreResearchs(Building);
-                
-        
+        ArrayList<baseGameItem> allGameItems = new ArrayList<>();
+
+        //all researchs buildings
+        Research DarkAgeResearch = new Research("DarkAgeResearch", 0, 0, 0, 0, 0, 0);
+        allGameItems.add(DarkAgeResearch);
+
+        Building Mill = new Building("Mill", 0, 100, 0, 0, 0, 35);
+        allGameItems.add(Mill);
+
+        Building TownCenter = new Building("TownCenter", 0, 275, 0, 100, 2, 150);
+        allGameItems.add(TownCenter);
+
+        Research Loom = new Research("Loom", 0, 0, 50, 0, 0, 25);
+        allGameItems.add(Loom);
+
+        Building Barracks = new Building("Barracks", 0, 175, 0, 0, 0, 50);
+        allGameItems.add(Barracks);
+
+        Building Blacksmith = new Building("Blacksmith", 0, 150, 0, 0, 1, 40);
+        allGameItems.add(Blacksmith);
+
+        Research Fletching = new Research("Fletching", 100, 0, 50, 0, 1, 30);
+        allGameItems.add(Fletching);
+
+        Research FedualAgeResearch = new Research("FedualAgeResearch", 500, 0, 0, 0, 0, 130);
+        allGameItems.add(FedualAgeResearch);
+
+        Building Market = new Building("Market", 0, 175, 0, 0, 1, 60);
+        Market.addPreRequisites(Mill);
+        Market.addPreRequisites(FedualAgeResearch);
+        allGameItems.add(Market);
+
+        Building ArcheryRange = new Building("ArcheryRange", 0, 175, 0, 0, 1, 50);
+        ArcheryRange.addPreRequisites(FedualAgeResearch);
+        ArcheryRange.addPreRequisites(Barracks);
+        allGameItems.add(ArcheryRange);
+
+        Building Stable = new Building("Stable", 0, 175, 0, 0, 1, 50);
+        Stable.addPreRequisites(FedualAgeResearch);
+        Stable.addPreRequisites(Barracks);
+        allGameItems.add(Stable);
+
+        Research CastleAgeResearch = new Research("CastleAgeResearch", 800, 0, 200, 0, 1, 160);
+        CastleAgeResearch.addPreRequisites(FedualAgeResearch);
+        CastleAgeResearch.addPreRequisites(Blacksmith);
+        CastleAgeResearch.addPreRequisites(Market);
+        CastleAgeResearch.addPreRequisites(ArcheryRange);
+        CastleAgeResearch.addPreRequisites(Stable);
+        allGameItems.add(CastleAgeResearch);
+
+        Research BodkinArrow = new Research("BodkinArrow", 200, 0, 100, 0, 0, 35);
+        BodkinArrow.addPreRequisites(CastleAgeResearch);
+        BodkinArrow.addPreRequisites(Fletching);
+        allGameItems.add(BodkinArrow);
+
+        Building SiegeWorkshop = new Building("SiegeWorkshop", 0, 200, 0, 0, 2, 40);
+        SiegeWorkshop.addPreRequisites(CastleAgeResearch);
+        SiegeWorkshop.addPreRequisites(Blacksmith);
+        allGameItems.add(SiegeWorkshop);
+
+        //...
+        TownCenter.addPreRequisites(CastleAgeResearch);
+
+        //Listing all items and prequisites
+        int i;
+        for (i = 0; i < allGameItems.size(); i++) {
+            System.out.println(allGameItems.get(i).getName());
+            allGameItems.get(i).listPrerequisiteNames();
+        }
+
+        //listing each item with it prequisites
+        //for (int i = 0; i < allGameItems.size(); i++) {
+        //   System.out.println(allGameItems.get(i).preRequisites.);
+        // }
     }
-    
+
 }
