@@ -26,6 +26,9 @@ public class AOKBO {
         Building Mill = new Building("Mill", 0, 100, 0, 0, 0, 35);
         allGameItems.add(Mill);
 
+        Building LumberCamp = new Building("Lumber Camp", 0, 100, 0, 0, 0, 35);
+        allGameItems.add(LumberCamp);
+
         Building TownCenter = new Building("TownCenter", 0, 275, 0, 100, 2, 150);
         allGameItems.add(TownCenter);
 
@@ -35,32 +38,38 @@ public class AOKBO {
         Building Barracks = new Building("Barracks", 0, 175, 0, 0, 0, 50);
         allGameItems.add(Barracks);
 
+        Research FeudalAgeResearch = new Research("FeudalAgeResearch", 500, 0, 0, 0, 0, 130);
+        allGameItems.add(FeudalAgeResearch);
+        FeudalAgeResearch.addPreRequisites(Barracks);
+        FeudalAgeResearch.addPreRequisites(Mill);
+        FeudalAgeResearch.addPreRequisites(LumberCamp);
+
         Building Blacksmith = new Building("Blacksmith", 0, 150, 0, 0, 1, 40);
+        Blacksmith.addPreRequisites(FeudalAgeResearch);
         allGameItems.add(Blacksmith);
 
         Research Fletching = new Research("Fletching", 100, 0, 50, 0, 1, 30);
         allGameItems.add(Fletching);
-
-        Research FedualAgeResearch = new Research("FedualAgeResearch", 500, 0, 0, 0, 0, 130);
-        allGameItems.add(FedualAgeResearch);
+        Fletching.addPreRequisites(FeudalAgeResearch);
+        Fletching.addPreRequisites(Blacksmith);
 
         Building Market = new Building("Market", 0, 175, 0, 0, 1, 60);
         Market.addPreRequisites(Mill);
-        Market.addPreRequisites(FedualAgeResearch);
+        Market.addPreRequisites(FeudalAgeResearch);
         allGameItems.add(Market);
 
         Building ArcheryRange = new Building("ArcheryRange", 0, 175, 0, 0, 1, 50);
-        ArcheryRange.addPreRequisites(FedualAgeResearch);
+        ArcheryRange.addPreRequisites(FeudalAgeResearch);
         ArcheryRange.addPreRequisites(Barracks);
         allGameItems.add(ArcheryRange);
 
         Building Stable = new Building("Stable", 0, 175, 0, 0, 1, 50);
-        Stable.addPreRequisites(FedualAgeResearch);
+        Stable.addPreRequisites(FeudalAgeResearch);
         Stable.addPreRequisites(Barracks);
         allGameItems.add(Stable);
 
         Research CastleAgeResearch = new Research("CastleAgeResearch", 800, 0, 200, 0, 1, 160);
-        CastleAgeResearch.addPreRequisites(FedualAgeResearch);
+        CastleAgeResearch.addPreRequisites(FeudalAgeResearch);
         CastleAgeResearch.addPreRequisites(Blacksmith);
         CastleAgeResearch.addPreRequisites(Market);
         CastleAgeResearch.addPreRequisites(ArcheryRange);
@@ -80,17 +89,26 @@ public class AOKBO {
         //...
         TownCenter.addPreRequisites(CastleAgeResearch);
 
-        //Listing all items and prequisites
-        int i;
-        for (i = 0; i < allGameItems.size(); i++) {
+        //Listing all items and prerequisites
+        for (int i = 0; i < allGameItems.size(); i++) {
             System.out.println(allGameItems.get(i).getName());
             allGameItems.get(i).listPrerequisiteNames();
         }
 
-        //listing each item with it prequisites
+        //listing each item with it prerequisites
         //for (int i = 0; i < allGameItems.size(); i++) {
         //   System.out.println(allGameItems.get(i).preRequisites.);
         // }
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+
+        //AOKBO targetAokbo = new AOKBO();
+        //targetAokbo.listingAllReq(SiegeWorkshop);
+        Fletching.listingAllReq(Fletching);
+        Fletching.totalWoodCost();
+
     }
 
 }

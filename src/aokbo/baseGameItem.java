@@ -18,6 +18,9 @@ public class baseGameItem {
     int creationTime;
     ArrayList<baseGameItem> preRequisites = new ArrayList<>();
 
+    //for listing all requirements
+    ArrayList<baseGameItem> allReq = new ArrayList<>();
+
     public baseGameItem(String name, int requiredFood, int requiredWood, int requiredGold, int requiredStone, int requiredAge, int creationTime) {
         this.name = name;
         this.creationTime = creationTime;
@@ -28,13 +31,47 @@ public class baseGameItem {
         this.requiredWood = requiredWood;
     }
 
+    //Lists all requirements
+    public void listingAllReq(baseGameItem target) {
+        for (int i = 0; i < target.getPrerequisites().size(); i++) {
+            //System.out.println(target.getPrerequisiteName(i));
+            //listingAllReq((baseGameItem) target.getPrerequisites().get(i));
+            if (!allReq.contains(target.getPrerequisites().get(i))) {
+                allReq.add((baseGameItem) target.getPrerequisites().get(i));
+                System.out.println(target.getPrerequisiteName(i));
+                listingAllReq((baseGameItem) target.getPrerequisites().get(i));
+            }
+        }
+    }
+
+    public void totalWoodCost() {
+        int temp = 0;
+        // allReq.forEach(targetCost -> {temp += cost(targetCost)} );
+        for (baseGameItem targetCost : allReq) {
+            temp += targetCost.requiredWood;
+        }
+        System.out.println(temp);
+    }
+
+    private int cost(baseGameItem anItem) {
+        return anItem.requiredWood;
+    }
+
     public void addPreRequisites(baseGameItem preRequisite) {
         this.preRequisites.add(preRequisite);
     }
 
+    public ArrayList getPrerequisites() {
+        return preRequisites;
+    }
+
+    public String getPrerequisiteName(int i) {
+        return preRequisites.get(i).name;
+    }
+
     public void listPrerequisiteNames() {
-        int i;
-        for (i = 0; i < preRequisites.size(); i++) {
+        //int i;
+        for (int i = 0; i < preRequisites.size(); i++) {
             System.out.println('-' + preRequisites.get(i).name);
         }
     }
