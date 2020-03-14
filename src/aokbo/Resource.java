@@ -23,7 +23,9 @@ public class Resource {
     int maxWorkerSlot;
     float totalResourceLeft;
     float resourcesProduced;
-    //deploy time ?
+    //deploy time for new vil?
+    //farms missing
+    //ingame reveal/scout time(for example it will take some time to find boars ingame)
 
     public Resource(String name, float gatherRate, float baseGatherRate, int maxWorkerSlot, float totalResourceLeft) {
         this.name = name;
@@ -35,8 +37,7 @@ public class Resource {
         dropOffBuilding = false;
         currentWorkerNumber = 0;
     }
-    
-    
+
     //maybe add some workers at the same time? so they could build it at the same time
     public void addBuilding(Building assign) {
         assignedBuilding = assign;
@@ -48,9 +49,11 @@ public class Resource {
         currentWorkerNumber++;//need to put an error check here.
     }
 
-    public void removeWorker(Unit gatherer) {
-        workerArrayList.remove(gatherer);
+    public Unit removeWorker() {
+        Unit tempUnit = workerArrayList.get(currentWorkerNumber);
+        workerArrayList.remove(currentWorkerNumber);
         currentWorkerNumber--; //need to put an error check here.
+        return tempUnit;
     }
 
     public float clockWork() {
