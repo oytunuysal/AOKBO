@@ -16,6 +16,7 @@ public class Resource {
     String name;
     float gatherRate; // gatherrate/second
     float baseGatherRate;
+    float walkingDistanceFactor; // a number between 0-1.
     boolean dropOffBuilding;
     Building assignedBuilding; // maybe an arraylist for here
     ArrayList<Unit> workerArrayList;
@@ -36,6 +37,14 @@ public class Resource {
         this.totalResourceLeft = totalResourceLeft;
         dropOffBuilding = false;
         currentWorkerNumber = 0;
+    }
+    
+    public void changeWalkingDistanceFactor(float factor){
+        walkingDistanceFactor = factor * walkingDistanceFactor; //not sure about this
+    }
+
+    public void changeGatherRate(float factor) {
+        gatherRate = factor * gatherRate;
     }
 
     //maybe add some workers at the same time? so they could build it at the same time

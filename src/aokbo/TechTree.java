@@ -25,6 +25,7 @@ public class TechTree {
     Research Loom;
     Building Barracks;
     Research FeudalAgeResearch;
+    Research DoubleBitAxResearch;
     Building Blacksmith;
     Research Fletching;
     Building Market;
@@ -38,7 +39,7 @@ public class TechTree {
         allGameItems = new ArrayList<>();
 
         //all researchs buildings
-        DarkAgeResearch = new Research("DarkAgeResearch", 0, 0, 0, 0, 0, 0);
+        DarkAgeResearch = new Research("DarkAgeResearch", 0, 0, 0, 0, 0, 0, 0, 0);
         allGameItems.add(DarkAgeResearch);
 
         Mill = new Building("Mill", 0, 100, 0, 0, 0, 35);
@@ -50,23 +51,27 @@ public class TechTree {
         TownCenter = new Building("TownCenter", 0, 275, 0, 100, 2, 150);
         allGameItems.add(TownCenter);
 
-        Loom = new Research("Loom", 0, 0, 50, 0, 0, 25);
+        Loom = new Research("Loom", 0, 0, 50, 0, 0, 25, 0, 0);
         allGameItems.add(Loom);
 
         Barracks = new Building("Barracks", 0, 175, 0, 0, 0, 50);
         allGameItems.add(Barracks);
 
-        FeudalAgeResearch = new Research("FeudalAgeResearch", 500, 0, 0, 0, 0, 130);
+        FeudalAgeResearch = new Research("FeudalAgeResearch", 500, 0, 0, 0, 0, 130, 0, 0);
         allGameItems.add(FeudalAgeResearch);
         FeudalAgeResearch.addPreRequisites(Barracks);
         FeudalAgeResearch.addPreRequisites(Mill);
         FeudalAgeResearch.addPreRequisites(LumberCamp);
 
+        DoubleBitAxResearch = new Research("Double-Bit Axe", 100, 50, 0, 0, 0, 25, 1, 20); //20% as template
+        DoubleBitAxResearch.addPreRequisites(FeudalAgeResearch);
+        DoubleBitAxResearch.addPreRequisites(LumberCamp);
+
         Blacksmith = new Building("Blacksmith", 0, 150, 0, 0, 1, 40);
         Blacksmith.addPreRequisites(FeudalAgeResearch);
         allGameItems.add(Blacksmith);
 
-        Fletching = new Research("Fletching", 100, 0, 50, 0, 1, 30);
+        Fletching = new Research("Fletching", 100, 0, 50, 0, 1, 30, 0, 0);
         allGameItems.add(Fletching);
         Fletching.addPreRequisites(FeudalAgeResearch);
         Fletching.addPreRequisites(Blacksmith);
@@ -86,7 +91,7 @@ public class TechTree {
         Stable.addPreRequisites(Barracks);
         allGameItems.add(Stable);
 
-        CastleAgeResearch = new Research("CastleAgeResearch", 800, 0, 200, 0, 1, 160);
+        CastleAgeResearch = new Research("CastleAgeResearch", 800, 0, 200, 0, 1, 160, 0, 0);
         CastleAgeResearch.addPreRequisites(FeudalAgeResearch);
         CastleAgeResearch.addPreRequisites(Blacksmith);
         CastleAgeResearch.addPreRequisites(Market);
@@ -94,7 +99,7 @@ public class TechTree {
         CastleAgeResearch.addPreRequisites(Stable);
         allGameItems.add(CastleAgeResearch);
 
-        BodkinArrow = new Research("Bodkin Arrow", 200, 0, 100, 0, 0, 35);
+        BodkinArrow = new Research("Bodkin Arrow", 200, 0, 100, 0, 0, 35, 0, 0);
         BodkinArrow.addPreRequisites(CastleAgeResearch);
         BodkinArrow.addPreRequisites(Fletching);
         allGameItems.add(BodkinArrow);
