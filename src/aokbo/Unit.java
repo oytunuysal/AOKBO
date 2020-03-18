@@ -10,11 +10,14 @@ package aokbo;
  * @author Oytun
  */
 public class Unit extends baseGameItem{
-
+    float walkingSpeed;
+    int carryCapacity;
     //public baseGameItem baseUnit;
 
-    public Unit(String name, int food, int wood, int gold, int age, int time) {
+    public Unit(String name, int food, int wood, int gold, int age, int time, float walkingSpeed, int carryCap) {
         super(name, food, wood, 0, gold, age, time);
+        this.walkingSpeed = walkingSpeed;
+        this.carryCapacity = carryCap;
     }
 
 }

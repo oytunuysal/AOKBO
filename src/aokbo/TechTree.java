@@ -25,7 +25,7 @@ public class TechTree {
     Research Loom;
     Building Barracks;
     Research FeudalAgeResearch;
-    Research DoubleBitAxResearch;
+    Research DoubleBitAxeResearch;
     Building Blacksmith;
     Research Fletching;
     Building Market;
@@ -34,6 +34,7 @@ public class TechTree {
     Research CastleAgeResearch;
     Research BodkinArrow;
     Building SiegeWorkshop;
+    Research BowSawResearch;
 
     public TechTree() {
         allGameItems = new ArrayList<>();
@@ -63,9 +64,9 @@ public class TechTree {
         FeudalAgeResearch.addPreRequisites(Mill);
         FeudalAgeResearch.addPreRequisites(LumberCamp);
 
-        DoubleBitAxResearch = new Research("Double-Bit Axe", 100, 50, 0, 0, 0, 25, 1, 20); //20% as template
-        DoubleBitAxResearch.addPreRequisites(FeudalAgeResearch);
-        DoubleBitAxResearch.addPreRequisites(LumberCamp);
+        DoubleBitAxeResearch = new Research("Double-Bit Axe", 100, 50, 0, 0, 1, 25, 1, 20); //20% as template
+        DoubleBitAxeResearch.addPreRequisites(FeudalAgeResearch);
+        DoubleBitAxeResearch.addPreRequisites(LumberCamp);
 
         Blacksmith = new Building("Blacksmith", 0, 150, 0, 0, 1, 40);
         Blacksmith.addPreRequisites(FeudalAgeResearch);
@@ -108,6 +109,11 @@ public class TechTree {
         SiegeWorkshop.addPreRequisites(CastleAgeResearch);
         SiegeWorkshop.addPreRequisites(Blacksmith);
         allGameItems.add(SiegeWorkshop);
+        
+        BowSawResearch = new Research("Bow Saw", 150, 100, 0, 0, 2, 50, 1, 20);
+        BowSawResearch.addPreRequisites(CastleAgeResearch);
+        BowSawResearch.addPreRequisites(DoubleBitAxeResearch);
+        allGameItems.add(BowSawResearch);
 
         //...
         TownCenter.addPreRequisites(CastleAgeResearch);

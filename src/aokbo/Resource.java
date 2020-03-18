@@ -13,9 +13,13 @@ import java.util.ArrayList;
  */
 public class Resource {
 
+    boolean state = true;
     String name;
+    float finalGatherRate;
+    // float efficiency;
     float gatherRate; // gatherrate/second
     float baseGatherRate;
+    float distanceGatherPoint;
     float walkingDistanceFactor; // a number between 0-1.
     boolean dropOffBuilding;
     Building assignedBuilding; // maybe an arraylist for here
@@ -28,29 +32,55 @@ public class Resource {
     //farms missing
     //ingame reveal/scout time(for example it will take some time to find boars ingame)
 
-    public Resource(String name, float gatherRate, float baseGatherRate, int maxWorkerSlot, float totalResourceLeft) {
+    public Resource(String name, float baseGatherRate, int maxWorkerSlot, float totalResourceLeft) {
         this.name = name;
-        this.gatherRate = gatherRate;
+        this.gatherRate = baseGatherRate;
         this.baseGatherRate = baseGatherRate;
         this.workerArrayList = new ArrayList();
         this.maxWorkerSlot = maxWorkerSlot;
         this.totalResourceLeft = totalResourceLeft;
         dropOffBuilding = false;
         currentWorkerNumber = 0;
+        distanceGatherPoint = 15; //for now
+        calculateFinalGatherRate();
+
     }
-    
-    public void changeWalkingDistanceFactor(float factor){
+
+    private void calculateFinalGatherRate() {
+        // 0.8 is the walking speed of a vil
+        //gather rate = CarryCap/ (time to collect + time to walk)
+        // carry cap = 13 for starting point
+        finalGatherRate = 13 / (walkingTime() + (13 / gatherRate));
+        System.out.println("Final gather rate = " + finalGatherRate);
+    }
+
+    private float walkingTime() {
+        return (distanceGatherPoint * 2 - 1) / (0.8f);
+    }
+
+    //private float efficiencyCalculator() {
+    //  return efficiency;
+    //}
+    public boolean currentState() {
+        return state;
+    }
+
+    public void changeWalkingDistanceFactor(float factor) {
         walkingDistanceFactor = factor * walkingDistanceFactor; //not sure about this
     }
 
     public void changeGatherRate(float factor) {
-        gatherRate = factor * gatherRate;
+        System.out.println("Factor/100 = " + factor / 100);
+        gatherRate += (factor / 100) * baseGatherRate;
+        calculateFinalGatherRate();
     }
 
     //maybe add some workers at the same time? so they could build it at the same time
     public void addBuilding(Building assign) {
+        distanceGatherPoint = 1; //just for now
         assignedBuilding = assign;
         dropOffBuilding = true;
+        calculateFinalGatherRate();
     }
 
     public void addWorker(Unit gatherer) {
@@ -66,8 +96,14 @@ public class Resource {
     }
 
     public float clockWork() {
-        resourcesProduced = gatherRate * currentWorkerNumber;
+        resourcesProduced = finalGatherRate * currentWorkerNumber;
         totalResourceLeft -= resourcesProduced;
+        if (totalResourceLeft < 0) {
+            //means it is depleted, if reseeadable -> reseed. else just moveout the vils.
+            resourcesProduced += totalResourceLeft;
+            state = false;
+            totalResourceLeft = 0;
+        }
         //if total resources left becomes 0 or negative, call a function the inform.
         return resourcesProduced;
     }

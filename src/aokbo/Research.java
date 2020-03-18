@@ -20,18 +20,19 @@ public class Research extends baseGameItem {
     public Research(String name, int food, int wood, int gold, int stone, int age, int time, int upgradeType, float gatherRateFactor) {
         super(name, food, wood, gold, stone, age, time);
         this.gatherRateFactor = gatherRateFactor;
+        this.upgradeType = upgradeType;
     }
-    
+
     public void applyResearch(Resource aResource) {
-        if (upgradeType == 0 || gatherRateFactor == 0) {
+        if (upgradeType == 0) {
             System.out.println("aokbo.Research.applyResearch() its not an Economic Research");
-            
+
         } else {
             applyEcoResearch(aResource);
         }
     }
-    
-    public void applyEcoResearch(Resource aResource) {
+
+    private void applyEcoResearch(Resource aResource) {
         if (upgradeType == 1) {
             aResource.changeGatherRate(gatherRateFactor);
         } else {
