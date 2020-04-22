@@ -10,7 +10,7 @@ package aokbo;
  * @author Oytun
  */
 public class Building extends baseGameItem{
-
+    //maybe put a flag for economic buildings.
     //public baseGameItem baseUnit;
 
     public Building(String name, int food, int wood, int gold, int stone, int age, int time) {

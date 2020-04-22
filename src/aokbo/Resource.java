@@ -18,7 +18,7 @@ public class Resource {
     float finalGatherRate;
     // float efficiency;
     float gatherRate; // gatherrate/second
-    float baseGatherRate;
+    float baseGatherRate;  //never changes
     float distanceGatherPoint;
     float walkingDistanceFactor; // a number between 0-1.
     boolean dropOffBuilding;

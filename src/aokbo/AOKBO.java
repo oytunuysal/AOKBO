@@ -18,7 +18,9 @@ public class AOKBO {
      */
     public static void main(String[] args) {
 
-        tryCaseLumbercampUpgrades();
+        tryCaseTechtree();
+        tryCaseResources();
+        tryCaseResourcesAddVilsByTime();
 
     }
 
@@ -29,7 +31,7 @@ public class AOKBO {
 
         TechTree firstTree = new TechTree();
         Building lumberCamp = firstTree.LumberCamp;
-        Resource Wood1 = new Resource("Wood", 0.38f, 15, 5000);
+        Resource Wood1 = new Resource("Wood", 0.388f, 15, 5000);
         Wood1.addBuilding(lumberCamp);
         ArrayList<Unit> vilList = new ArrayList();
         for (int i = 0; i < 10; i++) {
@@ -38,18 +40,18 @@ public class AOKBO {
         for (int i = 0; i < vilList.size(); i++) {
             Wood1.addWorker(vilList.get(i));
         }
-        Resource Wood4 = new Resource("Wood", 0.38f, 15, 5000);
+        Resource Wood4 = new Resource("Wood", 0.388f, 15, 5000);
         for (int i = 0; i < vilList.size(); i++) {
             Wood4.addWorker(vilList.get(i));
         }
 
-        Resource Wood2 = new Resource("Wood", 0.38f, 15, 5000);
+        Resource Wood2 = new Resource("Wood", 0.388f, 15, 5000);
         Wood2.addBuilding(lumberCamp);
         for (int i = 0; i < vilList.size(); i++) {
             Wood2.addWorker(vilList.get(i));
         }
 
-        Resource Wood3 = new Resource("Wood", 0.38f, 15, 5000);
+        Resource Wood3 = new Resource("Wood", 0.388f, 15, 5000);
         Wood3.addBuilding(lumberCamp);
         for (int i = 0; i < vilList.size(); i++) {
             Wood3.addWorker(vilList.get(i));
@@ -103,20 +105,21 @@ public class AOKBO {
 
     public static void tryCaseTechtree() {
         TechTree firstTree = new TechTree();
-        firstTree.listingAllReqbyName("Fletching");
+        //firstTree.listingAllReqbyName("Fletching");
         firstTree.clearAllReq();
         System.out.println();
         System.out.println();
         System.out.println();
         System.out.println();
-        firstTree.listingAllReqbyName("SiegeWorkshop");
+        //    firstTree.listingAllReqbyName("SiegeWorkshop");
+        firstTree.listingAllReqbyName("Bow Saw");
     }
 
     public static void tryCaseResources() {
         float totalFood = 0;
 
-        Resource Berry1 = new Resource("Berry", 0.38f, 15, 1000);
-        Resource Berry2 = new Resource("Berry", 0.38f, 15, 1000);
+        Resource Berry1 = new Resource("Berry", 0.310f, 15, 1000);
+        Resource Berry2 = new Resource("Berry", 0.310f, 15, 1000);
         Building Mill = new Building("Mill", 0, 0, 0, 0, 0, 10);
 
         ArrayList<Unit> vilList = new ArrayList();
@@ -155,6 +158,60 @@ public class AOKBO {
         //  System.out.println(totalFood);
         //}
         System.out.println("Total resource left on berry2 = " + Berry2.totalResourceLeft);
+    }
+
+    public static void tryCaseResourcesAddVilsByTime() {
+        float totalFood = 0;
+        Tasker tasker = new Tasker();
+
+        Resource BerryAllTogether = new Resource("Berry", 0.310f, 15, 1000);
+        Resource BerryOneByOne = new Resource("Berry", 0.310f, 15, 1000);
+        Building Mill1 = new Building("Mill", 0, 0, 0, 0, 0, 10);
+        Building Mill2 = new Building("Mill", 0, 0, 0, 0, 0, 10);
+
+        tasker.addResource(BerryAllTogether);
+
+        ArrayList<Unit> vilList = new ArrayList();
+        for (int i = 0; i < 10; i++) {
+            vilList.add(new Unit("Vil", 50, 0, 0, 0, 25, 0.8f, 13));
+        }
+
+        BerryAllTogether.addBuilding(Mill2);
+
+        //for (int i = 0; i < vilList.size(); i++) {
+        //    BerryAllTogether.addWorker(vilList.get(i));
+        //}
+        tasker.addCollectionofVils(vilList, 4);
+
+        int inGameSecond = 0;
+
+        while (BerryAllTogether.currentState()) {
+            inGameSecond++;
+            totalFood += BerryAllTogether.clockWork();
+            System.out.println(inGameSecond + ":ingameSecond -> " + totalFood);
+        }
+        System.out.println("Total resource left on BerryAllTogether = " + BerryAllTogether.totalResourceLeft);
+
+        BerryOneByOne.addBuilding(Mill1);
+        totalFood = 0;
+        int i = 0;
+        inGameSecond = 0;
+
+        while (BerryOneByOne.currentState()) {
+            if ((inGameSecond % 25) == 0 && i < 10) {
+                BerryOneByOne.addWorker(vilList.get(i));
+                i++;
+            }
+            inGameSecond++;
+            totalFood += BerryOneByOne.clockWork();
+            System.out.println(inGameSecond + ":ingameSecond -> " + totalFood);
+        }
+
+        //  for (int i = 0; i < 600; i++) {
+        //    totalFood += Berry2.clockWork();
+        //  System.out.println(totalFood);
+        //}
+        System.out.println("Total resource left on BerryOneByOne = " + BerryOneByOne.totalResourceLeft);
     }
 
 }

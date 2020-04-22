@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class TechTree {
 
     ArrayList<baseGameItem> allGameItems;
-
+    //implement-> darkage buildings 1 points, fedual 10 (or 15) pts ect ect.
     //for listing all requirements
     ArrayList<baseGameItem> allReq = new ArrayList<>();
 
