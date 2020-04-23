@@ -35,12 +35,13 @@ public class TechTree {
     Research BodkinArrow;
     Building SiegeWorkshop;
     Research BowSawResearch;
+    Research WheelbarrowResearch;
 
     public TechTree() {
         allGameItems = new ArrayList<>();
 
         //all researchs buildings
-        DarkAgeResearch = new Research("DarkAgeResearch", 0, 0, 0, 0, 0, 0, 0, 0);
+        DarkAgeResearch = new Research("DarkAgeResearch", 0, 0, 0, 0, 0, 0);
         allGameItems.add(DarkAgeResearch);
 
         Mill = new Building("Mill", 0, 100, 0, 0, 0, 35);
@@ -52,27 +53,34 @@ public class TechTree {
         TownCenter = new Building("TownCenter", 0, 275, 0, 100, 2, 150);
         allGameItems.add(TownCenter);
 
-        Loom = new Research("Loom", 0, 0, 50, 0, 0, 25, 0, 0);
+        Loom = new Research("Loom", 0, 0, 50, 0, 0, 25);
         allGameItems.add(Loom);
 
         Barracks = new Building("Barracks", 0, 175, 0, 0, 0, 50);
         allGameItems.add(Barracks);
 
-        FeudalAgeResearch = new Research("FeudalAgeResearch", 500, 0, 0, 0, 0, 130, 0, 0);
+        FeudalAgeResearch = new Research("FeudalAgeResearch", 500, 0, 0, 0, 0, 130);
         allGameItems.add(FeudalAgeResearch);
         FeudalAgeResearch.addPreRequisites(Barracks);
         FeudalAgeResearch.addPreRequisites(Mill);
         FeudalAgeResearch.addPreRequisites(LumberCamp);
 
-        DoubleBitAxeResearch = new Research("Double-Bit Axe", 100, 50, 0, 0, 1, 25, 1, 20); //20% as template
+        DoubleBitAxeResearch = new Research("Double-Bit Axe", 100, 50, 0, 0, 1, 25); //20% as template
         DoubleBitAxeResearch.addPreRequisites(FeudalAgeResearch);
         DoubleBitAxeResearch.addPreRequisites(LumberCamp);
+        DoubleBitAxeResearch.addUpgradeAffect(1,20);
+        
+        WheelbarrowResearch = new Research("Wheelbarrow", 175, 50, 0, 0, 1, 75);
+        WheelbarrowResearch.addPreRequisites(FeudalAgeResearch);
+        WheelbarrowResearch.addPreRequisites(TownCenter);
+        WheelbarrowResearch.addUpgradeAffect(3, 25); //carry cap
+        WheelbarrowResearch.addUpgradeAffect(2, 10); //movement speed
 
         Blacksmith = new Building("Blacksmith", 0, 150, 0, 0, 1, 40);
         Blacksmith.addPreRequisites(FeudalAgeResearch);
         allGameItems.add(Blacksmith);
 
-        Fletching = new Research("Fletching", 100, 0, 50, 0, 1, 30, 0, 0);
+        Fletching = new Research("Fletching", 100, 0, 50, 0, 1, 30);
         allGameItems.add(Fletching);
         Fletching.addPreRequisites(FeudalAgeResearch);
         Fletching.addPreRequisites(Blacksmith);
@@ -92,7 +100,7 @@ public class TechTree {
         Stable.addPreRequisites(Barracks);
         allGameItems.add(Stable);
 
-        CastleAgeResearch = new Research("CastleAgeResearch", 800, 0, 200, 0, 1, 160, 0, 0);
+        CastleAgeResearch = new Research("CastleAgeResearch", 800, 0, 200, 0, 1, 160);
         CastleAgeResearch.addPreRequisites(FeudalAgeResearch);
         CastleAgeResearch.addPreRequisites(Blacksmith);
         CastleAgeResearch.addPreRequisites(Market);
@@ -100,7 +108,7 @@ public class TechTree {
         CastleAgeResearch.addPreRequisites(Stable);
         allGameItems.add(CastleAgeResearch);
 
-        BodkinArrow = new Research("Bodkin Arrow", 200, 0, 100, 0, 0, 35, 0, 0);
+        BodkinArrow = new Research("Bodkin Arrow", 200, 0, 100, 0, 0, 35);
         BodkinArrow.addPreRequisites(CastleAgeResearch);
         BodkinArrow.addPreRequisites(Fletching);
         allGameItems.add(BodkinArrow);
@@ -110,9 +118,10 @@ public class TechTree {
         SiegeWorkshop.addPreRequisites(Blacksmith);
         allGameItems.add(SiegeWorkshop);
         
-        BowSawResearch = new Research("Bow Saw", 150, 100, 0, 0, 2, 50, 1, 20);
+        BowSawResearch = new Research("Bow Saw", 150, 100, 0, 0, 2, 50);
         BowSawResearch.addPreRequisites(CastleAgeResearch);
         BowSawResearch.addPreRequisites(DoubleBitAxeResearch);
+        BowSawResearch.addUpgradeAffect(1, 20);
         allGameItems.add(BowSawResearch);
 
         //...
@@ -152,7 +161,7 @@ public class TechTree {
         for (int i = 0; i < target.getPrerequisites().size(); i++) {
             //System.out.println(target.getPrerequisiteName(i));
             //listingAllReq((baseGameItem) target.getPrerequisites().get(i));
-            if (!allReq.contains(target.getPrerequisites().get(i))) {
+            if (!allReq.contains(target.getPrerequisites().get(i))) { //put target.getPrerequisites().get(i)) into a variable
                 allReq.add((baseGameItem) target.getPrerequisites().get(i));
                 System.out.println(target.getPrerequisiteName(i));
                 listingAllReq((baseGameItem) target.getPrerequisites().get(i));

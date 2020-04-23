@@ -18,9 +18,57 @@ public class AOKBO {
      */
     public static void main(String[] args) {
 
-        tryCaseTechtree();
-        tryCaseResources();
-        tryCaseResourcesAddVilsByTime();
+        tryCaseWheelbarrow();
+        //tryCaseTechtree();
+        //tryCaseResources();
+        //tryCaseResourcesAddVilsByTime();
+
+    }
+
+    public static void tryCaseWheelbarrow() {
+        float totalWood = 0;
+        int inGameSecond = 0;
+        TechTree firstTree = new TechTree();
+        Building lumberCamp = firstTree.LumberCamp;
+        Resource Wood1 = new Resource("Wood", 0.388f, 15, 5000, 10);
+
+        ArrayList<Unit> vilList = new ArrayList();
+        for (int i = 0; i < 10; i++) {
+            vilList.add(new Unit("Vil", 50, 0, 0, 0, 25, 0.8f, 10));
+        }
+
+        for (int i = 0; i < vilList.size(); i++) {
+            Wood1.addWorker(vilList.get(i));
+        }
+
+        Resource WoodWheel = new Resource("Wood", 0.388f, 15, 5000, 10);
+        for (int i = 0; i < vilList.size(); i++) {
+            WoodWheel.addWorker(vilList.get(i));
+        }
+
+        firstTree.WheelbarrowResearch.applyResearch(WoodWheel);
+
+        inGameSecond = 0;
+        totalWood = 0;
+
+        System.out.println("Before Wheelbarrow upgrade");
+
+        while (Wood1.currentState()) {
+            inGameSecond++;
+            totalWood += Wood1.clockWork();
+        }
+        System.out.println("ingameSecond -> " + inGameSecond + " \nTotal Wood Collected ->" + totalWood);
+
+        inGameSecond = 0;
+        totalWood = 0;
+
+        System.out.println("After Wheelbarrow upgrade");
+
+        while (WoodWheel.currentState()) {
+            inGameSecond++;
+            totalWood += WoodWheel.clockWork();
+        }
+        System.out.println("ingameSecond -> " + inGameSecond + " \nTotal Wood Collected ->" + totalWood);
 
     }
 
@@ -31,7 +79,7 @@ public class AOKBO {
 
         TechTree firstTree = new TechTree();
         Building lumberCamp = firstTree.LumberCamp;
-        Resource Wood1 = new Resource("Wood", 0.388f, 15, 5000);
+        Resource Wood1 = new Resource("Wood", 0.388f, 15, 5000, 10);
         Wood1.addBuilding(lumberCamp);
         ArrayList<Unit> vilList = new ArrayList();
         for (int i = 0; i < 10; i++) {
@@ -40,18 +88,18 @@ public class AOKBO {
         for (int i = 0; i < vilList.size(); i++) {
             Wood1.addWorker(vilList.get(i));
         }
-        Resource Wood4 = new Resource("Wood", 0.388f, 15, 5000);
+        Resource Wood4 = new Resource("Wood", 0.388f, 15, 5000, 10);
         for (int i = 0; i < vilList.size(); i++) {
             Wood4.addWorker(vilList.get(i));
         }
 
-        Resource Wood2 = new Resource("Wood", 0.388f, 15, 5000);
+        Resource Wood2 = new Resource("Wood", 0.388f, 15, 5000, 10);
         Wood2.addBuilding(lumberCamp);
         for (int i = 0; i < vilList.size(); i++) {
             Wood2.addWorker(vilList.get(i));
         }
 
-        Resource Wood3 = new Resource("Wood", 0.388f, 15, 5000);
+        Resource Wood3 = new Resource("Wood", 0.388f, 15, 5000, 10);
         Wood3.addBuilding(lumberCamp);
         for (int i = 0; i < vilList.size(); i++) {
             Wood3.addWorker(vilList.get(i));
@@ -118,8 +166,8 @@ public class AOKBO {
     public static void tryCaseResources() {
         float totalFood = 0;
 
-        Resource Berry1 = new Resource("Berry", 0.310f, 15, 1000);
-        Resource Berry2 = new Resource("Berry", 0.310f, 15, 1000);
+        Resource Berry1 = new Resource("Berry", 0.310f, 15, 1000, 10);
+        Resource Berry2 = new Resource("Berry", 0.310f, 15, 1000, 10);
         Building Mill = new Building("Mill", 0, 0, 0, 0, 0, 10);
 
         ArrayList<Unit> vilList = new ArrayList();
@@ -164,8 +212,8 @@ public class AOKBO {
         float totalFood = 0;
         Tasker tasker = new Tasker();
 
-        Resource BerryAllTogether = new Resource("Berry", 0.310f, 15, 1000);
-        Resource BerryOneByOne = new Resource("Berry", 0.310f, 15, 1000);
+        Resource BerryAllTogether = new Resource("Berry", 0.310f, 15, 1000, 10);
+        Resource BerryOneByOne = new Resource("Berry", 0.310f, 15, 1000, 10);
         Building Mill1 = new Building("Mill", 0, 0, 0, 0, 0, 10);
         Building Mill2 = new Building("Mill", 0, 0, 0, 0, 0, 10);
 

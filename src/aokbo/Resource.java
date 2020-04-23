@@ -28,11 +28,13 @@ public class Resource {
     int maxWorkerSlot;
     float totalResourceLeft;
     float resourcesProduced;
+    int baseCarryCapacity;
+    int carryCapacity;
     //deploy time for new vil?
     //farms missing
     //ingame reveal/scout time(for example it will take some time to find boars ingame)
 
-    public Resource(String name, float baseGatherRate, int maxWorkerSlot, float totalResourceLeft) {
+    public Resource(String name, float baseGatherRate, int maxWorkerSlot, float totalResourceLeft, int baseCarryCapacity) {
         this.name = name;
         this.gatherRate = baseGatherRate;
         this.baseGatherRate = baseGatherRate;
@@ -42,6 +44,9 @@ public class Resource {
         dropOffBuilding = false;
         currentWorkerNumber = 0;
         distanceGatherPoint = 15; //for now
+        this.baseCarryCapacity = baseCarryCapacity;
+        this.carryCapacity = baseCarryCapacity;
+        this.walkingDistanceFactor = (float) 0.8;
         calculateFinalGatherRate();
 
     }
@@ -50,12 +55,20 @@ public class Resource {
         // 0.8 is the walking speed of a vil
         //gather rate = CarryCap/ (time to collect + time to walk)
         // carry cap = 13 for starting point
-        finalGatherRate = 13 / (walkingTime() + (13 / gatherRate));
+        //finalGatherRate = 13 / (walkingTime() + (13 / gatherRate));
+        finalGatherRate = carryCapacity / (walkingTime() + (carryCapacity / gatherRate));
         System.out.println("Final gather rate = " + finalGatherRate);
     }
 
     private float walkingTime() {
-        return (distanceGatherPoint * 2 - 1) / (0.8f);
+        return (distanceGatherPoint * 2 - 1) / (walkingDistanceFactor);
+    }
+
+    public void changeCarryCap(float factor) {
+        System.out.println("before affect : " + carryCapacity);
+        carryCapacity += (factor / 100) * carryCapacity;
+        System.out.println("after affect : " + carryCapacity);
+        calculateFinalGatherRate();
     }
 
     //private float efficiencyCalculator() {
@@ -66,7 +79,10 @@ public class Resource {
     }
 
     public void changeWalkingDistanceFactor(float factor) {
-        walkingDistanceFactor = factor * walkingDistanceFactor; //not sure about this
+        System.out.println("before affect : " + walkingDistanceFactor);
+        walkingDistanceFactor += (factor / 100) * walkingDistanceFactor; //not sure about this
+        System.out.println("After : " + walkingDistanceFactor);
+        calculateFinalGatherRate();
     }
 
     public void changeGatherRate(float factor) {
