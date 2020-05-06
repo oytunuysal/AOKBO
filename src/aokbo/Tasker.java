@@ -7,7 +7,7 @@ package aokbo;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.Comparator;
 
 /**
  *
@@ -15,8 +15,17 @@ import java.util.Iterator;
  */
 public class Tasker { //This is a sort of adapter class.
 
-    ArrayList<Resource> allResources; //holds all available resources.
+    ArrayList<Resource> allResources;
     //maybe a lookup table for here
+    /*
+    Inputs for decider*
+    1-Wood
+    2-Food
+    3-Gold
+    4-Stone
+     *///holds all available resources.
+    //Comparator<Resource> cm1;
+
 
     /*
     1-Wood
@@ -27,59 +36,50 @@ public class Tasker { //This is a sort of adapter class.
     6-Hunter
      */
     public Tasker() {
+        //this.cm1 = Comparator.comparing(Resource::getFinalGatherRate);
         this.allResources = new ArrayList<>();
     }
 
-    public void addResource(Resource eResource) {
-        allResources.add(eResource);
+    public void addResource(Resource aResource) {
+        allResources.add(aResource);
+
     }
 
     public void addResourceList(Collection resource) {
         allResources.addAll(resource);
     }
 
+    public Resource calculateOptimalResource(int type) {
+        //allResources.sort(cm1);
+        Resource temp = null;
+        float max = 0;
+        float time;
+        float resourcePerVil;
+        float newGR; //new gather rate
+        for (Resource next : allResources) {
+            if (next.sourceType == type && next.currentWorkerNumber < next.maxWorkerSlot) {
+                resourcePerVil = next.totalResourceLeft / (next.currentWorkerNumber + 1);
+                time = resourcePerVil / next.finalGatherRate;
+                time += 18; //deploy time
+                newGR = resourcePerVil / time;
+                if (newGR > max) {
+                    max = newGR;
+                    temp = next;
+                }
+            }
+        }
+        System.out.println("newGR = " + max + " Name = " + temp.name);
+        return temp;
+    }
+
     public void addVilTask(Unit gatherer, int position) {
         //int indicates the resource
         Resource temp;
-        switch (position) {
-            case 1:
-                temp = findResource("Wood");
-                if (temp != null) {
-                    temp.addWorker(gatherer);
-                }
-                break;
-            case 2:
-                temp = findResource("Gold");
-                if (temp != null) {
-                    temp.addWorker(gatherer);
-                }
-                break;
-            case 3:
-                temp = findResource("Stone");
-                if (temp != null) {
-                    temp.addWorker(gatherer);
-                }
-                break;
-            case 4:
-                temp = findResource("Berry");
-                if (temp != null) {
-                    temp.addWorker(gatherer);
-                }
-                break;
-            case 5:
-                temp = findResource("Sheep");
-                if (temp != null) {
-                    temp.addWorker(gatherer);
-                }
-                break;
-            case 6:
-                temp = findResource("Hunt");
-                if (temp != null) {
-                    temp.addWorker(gatherer);
-                }
-                break;
-        }
 
+        temp = calculateOptimalResource(position);
+        if (temp != null) {
+            temp.addWorker(gatherer);
+        }
     }
 
     public Resource findResource(String name) {

@@ -18,11 +18,95 @@ public class AOKBO {
      */
     public static void main(String[] args) {
 
-        tryCaseWheelbarrow();
+        tryCaseFood();
+        //tryCaseDeer();
+        //tryCaseWheelbarrow();
         //tryCaseTechtree();
         //tryCaseResources();
         //tryCaseResourcesAddVilsByTime();
 
+    }
+
+    public static void tryCaseFood() {
+        float totalFood = 0;
+        int inGameSecond = 0;
+        TechTree firstTree = new TechTree();
+        Building mill = firstTree.Mill;
+        Resource deer1 = new Resource(2, "Hunt without mill", 0.408f, 7, 124, 35, 16);
+        Resource deer2 = new Resource(2, "Hunt without mill", 0.408f, 7, 124, 35, 16);
+        Resource deer3 = new Resource(2, "Hunt without mill", 0.408f, 7, 124, 35, 16);
+        Resource berry = new Resource(2, "Berry", 0.310f, 16, 800, 10, 8);
+        Resource sheep = new Resource(2, "Sheep", 0.330f, 10, 800, 10, 0);
+        
+
+        ArrayList<Unit> vilList = new ArrayList();
+        for (int i = 0; i < 30; i++) {
+            vilList.add(new Unit("Vil", 50, 0, 0, 0, 25, 0.8f, 10));
+        }
+
+        Tasker tasker = new Tasker();
+        
+        tasker.addResource(deer1);
+        tasker.addResource(deer2);
+        tasker.addResource(deer3);
+        tasker.addResource(berry);
+        tasker.addResource(sheep);
+        
+        tasker.addVilTask(vilList.remove(0), 2);
+        tasker.addVilTask(vilList.remove(0), 2);
+        tasker.addVilTask(vilList.remove(0), 2);
+
+        while (inGameSecond<1000) {
+            inGameSecond++;
+            if (inGameSecond % 25 == 0 && !vilList.isEmpty()) {
+                tasker.addVilTask(vilList.remove(0), 2);
+                System.out.println("Vil added: " + inGameSecond);
+            }
+            totalFood += deer1.clockWork();
+            totalFood += deer2.clockWork();
+            totalFood += deer3.clockWork();
+            totalFood += berry.clockWork();
+            totalFood += sheep.clockWork();
+        }
+        System.out.println("ingameSecond -> " + inGameSecond + " \nTotal Food Collected ->" + totalFood);
+    }
+
+    public static void tryCaseDeer() {
+        float totalFood = 0;
+        int inGameSecond = 0;
+        TechTree firstTree = new TechTree();
+        Building mill = firstTree.Mill;
+        Resource deer = new Resource(2, "Hunt", 0.408f, 7, 124, 35, 16);
+        Resource deer2 = new Resource(2, "Hunt without mill", 0.408f, 7, 124, 35, 16);
+        Resource berry = new Resource(2, "Berry", 0.310f, 16, 800, 10, 8);
+        deer.addBuilding(mill);
+        berry.addBuilding(mill);
+
+        ArrayList<Unit> vilList = new ArrayList();
+        for (int i = 0; i < 30; i++) {
+            vilList.add(new Unit("Vil", 50, 0, 0, 0, 25, 0.8f, 10));
+        }
+
+        Tasker tasker = new Tasker();
+
+        tasker.addResource(deer);
+        tasker.addResource(deer2);
+        tasker.addResource(berry);
+        tasker.addVilTask(vilList.remove(0), 2);
+        tasker.addVilTask(vilList.remove(0), 2);
+        tasker.addVilTask(vilList.remove(0), 2);
+
+        while (deer.currentState() || deer2.currentState() || berry.currentState()) {
+            inGameSecond++;
+            if (inGameSecond % 25 == 0 && !vilList.isEmpty()) {
+                tasker.addVilTask(vilList.remove(0), 2);
+                System.out.println("Vil added: " + inGameSecond);
+            }
+            totalFood += deer.clockWork();
+            totalFood += deer2.clockWork();
+            totalFood += berry.clockWork();
+        }
+        System.out.println("ingameSecond -> " + inGameSecond + " \nTotal Food Collected ->" + totalFood);
     }
 
     public static void tryCaseWheelbarrow() {
@@ -30,7 +114,7 @@ public class AOKBO {
         int inGameSecond = 0;
         TechTree firstTree = new TechTree();
         Building lumberCamp = firstTree.LumberCamp;
-        Resource Wood1 = new Resource("Wood", 0.388f, 15, 5000, 10);
+        Resource Wood1 = new Resource(1, "Wood", 0.388f, 15, 5000, 10, 8);
 
         ArrayList<Unit> vilList = new ArrayList();
         for (int i = 0; i < 10; i++) {
@@ -41,7 +125,7 @@ public class AOKBO {
             Wood1.addWorker(vilList.get(i));
         }
 
-        Resource WoodWheel = new Resource("Wood", 0.388f, 15, 5000, 10);
+        Resource WoodWheel = new Resource(1, "Wood", 0.388f, 15, 5000, 10, 8);
         for (int i = 0; i < vilList.size(); i++) {
             WoodWheel.addWorker(vilList.get(i));
         }
@@ -79,7 +163,7 @@ public class AOKBO {
 
         TechTree firstTree = new TechTree();
         Building lumberCamp = firstTree.LumberCamp;
-        Resource Wood1 = new Resource("Wood", 0.388f, 15, 5000, 10);
+        Resource Wood1 = new Resource(1, "Wood", 0.388f, 15, 5000, 10, 8);
         Wood1.addBuilding(lumberCamp);
         ArrayList<Unit> vilList = new ArrayList();
         for (int i = 0; i < 10; i++) {
@@ -88,18 +172,18 @@ public class AOKBO {
         for (int i = 0; i < vilList.size(); i++) {
             Wood1.addWorker(vilList.get(i));
         }
-        Resource Wood4 = new Resource("Wood", 0.388f, 15, 5000, 10);
+        Resource Wood4 = new Resource(1, "Wood", 0.388f, 15, 5000, 10, 8);
         for (int i = 0; i < vilList.size(); i++) {
             Wood4.addWorker(vilList.get(i));
         }
 
-        Resource Wood2 = new Resource("Wood", 0.388f, 15, 5000, 10);
+        Resource Wood2 = new Resource(1, "Wood", 0.388f, 15, 5000, 10, 8);
         Wood2.addBuilding(lumberCamp);
         for (int i = 0; i < vilList.size(); i++) {
             Wood2.addWorker(vilList.get(i));
         }
 
-        Resource Wood3 = new Resource("Wood", 0.388f, 15, 5000, 10);
+        Resource Wood3 = new Resource(1, "Wood", 0.388f, 15, 5000, 10, 8);
         Wood3.addBuilding(lumberCamp);
         for (int i = 0; i < vilList.size(); i++) {
             Wood3.addWorker(vilList.get(i));
@@ -166,8 +250,8 @@ public class AOKBO {
     public static void tryCaseResources() {
         float totalFood = 0;
 
-        Resource Berry1 = new Resource("Berry", 0.310f, 15, 1000, 10);
-        Resource Berry2 = new Resource("Berry", 0.310f, 15, 1000, 10);
+        Resource Berry1 = new Resource(1, "Berry", 0.310f, 15, 1000, 10, 8);
+        Resource Berry2 = new Resource(1, "Berry", 0.310f, 15, 1000, 10, 8);
         Building Mill = new Building("Mill", 0, 0, 0, 0, 0, 10);
 
         ArrayList<Unit> vilList = new ArrayList();
@@ -212,8 +296,8 @@ public class AOKBO {
         float totalFood = 0;
         Tasker tasker = new Tasker();
 
-        Resource BerryAllTogether = new Resource("Berry", 0.310f, 15, 1000, 10);
-        Resource BerryOneByOne = new Resource("Berry", 0.310f, 15, 1000, 10);
+        Resource BerryAllTogether = new Resource(1, "Berry", 0.310f, 15, 1000, 10, 8);
+        Resource BerryOneByOne = new Resource(1, "Berry", 0.310f, 15, 1000, 10, 8);
         Building Mill1 = new Building("Mill", 0, 0, 0, 0, 0, 10);
         Building Mill2 = new Building("Mill", 0, 0, 0, 0, 0, 10);
 
@@ -229,7 +313,7 @@ public class AOKBO {
         //for (int i = 0; i < vilList.size(); i++) {
         //    BerryAllTogether.addWorker(vilList.get(i));
         //}
-        tasker.addCollectionofVils(vilList, 4);
+        tasker.addCollectionofVils(vilList, 2);
 
         int inGameSecond = 0;
 
