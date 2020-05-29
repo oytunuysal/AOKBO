@@ -62,8 +62,13 @@ public class Resource {
         System.out.println("Final gather rate = " + finalGatherRate);
     }
 
-    private float walkingTime() {
-        return (distanceGatherPoint * 2 - 1) / (walkingDistanceFactor);
+    public float walkingTime() {
+        float temp = (distanceGatherPoint * 2 - 1) / (walkingDistanceFactor);
+        if (temp < 0) {
+            return 0;
+        } else {
+            return temp;
+        }
     }
 
     public void changeCarryCap(float factor) {
@@ -87,8 +92,6 @@ public class Resource {
     public int getSourceType() {
         return sourceType;
     }
-    
-    
 
     public void changeWalkingDistanceFactor(float factor) {
         System.out.println("before affect : " + walkingDistanceFactor);
@@ -117,23 +120,37 @@ public class Resource {
     }
 
     public Unit removeWorker() {
-        Unit tempUnit = workerArrayList.get(currentWorkerNumber);
-        workerArrayList.remove(currentWorkerNumber);
+        Unit tempUnit = workerArrayList.get(currentWorkerNumber-1);
+        workerArrayList.remove(currentWorkerNumber-1);
         currentWorkerNumber--; //need to put an error check here.
         return tempUnit;
     }
 
-    public float clockWork() {
-        resourcesProduced = finalGatherRate * currentWorkerNumber;
-        totalResourceLeft -= resourcesProduced;
-        if (totalResourceLeft < 0) {
-            //means it is depleted, if reseeadable -> reseed. else just moveout the vils.
-            resourcesProduced += totalResourceLeft;
-            state = false;
-            totalResourceLeft = 0;
+    public ArrayList<Unit> removeAllWorker() {
+        ArrayList<Unit> tempList = new ArrayList<>();
+        while(!workerArrayList.isEmpty()){
+            tempList.add(removeWorker());
         }
-        //if total resources left becomes 0 or negative, call a function the inform.
-        return resourcesProduced;
+        return tempList;
+    }
+
+    public float clockWork() {
+        if (currentState() == true) {
+            resourcesProduced = finalGatherRate * currentWorkerNumber;
+            totalResourceLeft -= resourcesProduced;
+            if (totalResourceLeft <= 0) {
+                //means it is depleted, if reseeadable -> reseed. else just moveout the vils.
+                resourcesProduced += totalResourceLeft;
+                state = false;
+                totalResourceLeft = 0;
+                System.out.println(name + " depleted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            }
+            //if total resources left becomes 0 or negative, call a function the inform.
+            return resourcesProduced;
+        } else {
+            return 0;
+        }
+
     }
 
 }

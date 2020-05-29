@@ -16,6 +16,7 @@ import java.util.Comparator;
 public class Tasker { //This is a sort of adapter class.
 
     ArrayList<Resource> allResources;
+
     //maybe a lookup table for here
     /*
     Inputs for decider*
@@ -68,7 +69,11 @@ public class Tasker { //This is a sort of adapter class.
                 }
             }
         }
-        System.out.println("newGR = " + max + " Name = " + temp.name);
+        if (temp != null) {
+            System.out.println("newGR = " + max + " Name = " + temp.name);
+            System.out.println("Walking time = " + temp.walkingTime());
+        }
+
         return temp;
     }
 
@@ -79,6 +84,8 @@ public class Tasker { //This is a sort of adapter class.
         temp = calculateOptimalResource(position);
         if (temp != null) {
             temp.addWorker(gatherer);
+        }else{
+            System.out.println("No more space for that job!");
         }
     }
 

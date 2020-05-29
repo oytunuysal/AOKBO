@@ -32,12 +32,16 @@ public class AOKBO {
         int inGameSecond = 0;
         TechTree firstTree = new TechTree();
         Building mill = firstTree.Mill;
-        Resource deer1 = new Resource(2, "Hunt without mill", 0.408f, 7, 124, 35, 16);
-        Resource deer2 = new Resource(2, "Hunt without mill", 0.408f, 7, 124, 35, 16);
-        Resource deer3 = new Resource(2, "Hunt without mill", 0.408f, 7, 124, 35, 16);
-        Resource berry = new Resource(2, "Berry", 0.310f, 16, 800, 10, 8);
-        Resource sheep = new Resource(2, "Sheep", 0.330f, 10, 800, 10, 0);
-        
+        Resource deer1 = new Resource(2, "Hunt without mill1", 0.408f, 30, 800, 35, 16);
+        //Resource deer2 = new Resource(2, "Hunt without mill2", 0.408f, 7, 124, 35, 16);
+        //Resource deer3 = new Resource(2, "Hunt without mill3", 0.408f, 7, 124, 35, 16);
+        Resource berry = new Resource(2, "Berry", 0.310f, 30, 800, 10, 8);
+        Resource sheep = new Resource(2, "Sheep", 0.330f, 30, 800, 10, 0);
+        berry.addBuilding(mill);
+        boolean flagDeer1 = true;
+        boolean flagBerry = true;
+
+        boolean flagSheep = true;
 
         ArrayList<Unit> vilList = new ArrayList();
         for (int i = 0; i < 30; i++) {
@@ -45,28 +49,57 @@ public class AOKBO {
         }
 
         Tasker tasker = new Tasker();
-        
+
         tasker.addResource(deer1);
-        tasker.addResource(deer2);
-        tasker.addResource(deer3);
+        //tasker.addResource(deer2);
+        //tasker.addResource(deer3);
         tasker.addResource(berry);
         tasker.addResource(sheep);
-        
-        tasker.addVilTask(vilList.remove(0), 2);
-        tasker.addVilTask(vilList.remove(0), 2);
-        tasker.addVilTask(vilList.remove(0), 2);
 
-        while (inGameSecond<1000) {
+        tasker.addVilTask(vilList.remove(0), 2);
+        tasker.addVilTask(vilList.remove(0), 2);
+        tasker.addVilTask(vilList.remove(0), 2);
+        float tempFood = -1;
+
+        while (tempFood < totalFood) {
+            tempFood = totalFood;
             inGameSecond++;
+            if (inGameSecond == 451) {
+                deer1.addBuilding(mill);
+            }
             if (inGameSecond % 25 == 0 && !vilList.isEmpty()) {
                 tasker.addVilTask(vilList.remove(0), 2);
                 System.out.println("Vil added: " + inGameSecond);
             }
-            totalFood += deer1.clockWork();
-            totalFood += deer2.clockWork();
-            totalFood += deer3.clockWork();
-            totalFood += berry.clockWork();
-            totalFood += sheep.clockWork();
+            if (flagDeer1) {
+                if (deer1.currentState()) {
+                    totalFood += deer1.clockWork();
+                } else {
+                    tasker.addCollectionofVils(deer1.removeAllWorker(), 2);
+                    flagDeer1 = false;
+                }
+            }
+            if (flagBerry) {
+                if (berry.currentState()) {
+                    totalFood += berry.clockWork();
+                } else {
+                    tasker.addCollectionofVils(berry.removeAllWorker(), 2);
+                    flagBerry = false;
+                }
+            }
+            if (flagSheep) {
+                if (sheep.currentState()) {
+                    totalFood += sheep.clockWork();
+                } else {
+                    tasker.addCollectionofVils(sheep.removeAllWorker(), 2);
+                    flagSheep = false;
+                }
+            }
+
+            // totalFood += deer2.clockWork();
+            // totalFood += deer3.clockWork();
+            //totalFood += berry.clockWork();
+            //totalFood += sheep.clockWork();
         }
         System.out.println("ingameSecond -> " + inGameSecond + " \nTotal Food Collected ->" + totalFood);
     }
