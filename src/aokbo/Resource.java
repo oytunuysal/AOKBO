@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class Resource {
 
     boolean state = true;
+    public boolean hasDepleted = false;
     String name;
     int sourceType;
     float finalGatherRate;
@@ -83,6 +84,9 @@ public class Resource {
     //}
     public boolean currentState() {
         return state;
+    }
+    public boolean hasDepleted(){
+        return hasDepleted;
     }
 
     public float getFinalGatherRate() {

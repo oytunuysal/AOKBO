@@ -5,21 +5,26 @@
  */
 package aokbo;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Oytun
  */
 public class gameRules {
 
-    int food, wood, gold, stone, maxPop, startingAge;
+    int food, wood, gold, stone, maxPop, startingAge, startingVilCount;
+    ArrayList<Building> startingBuildings;
 
-    public gameRules(int startingFood, int startingWood, int startingGold, int startingStone, int maxPop, int startingAge) {
+    public gameRules(int startingFood, int startingWood, int startingGold, int startingStone, int maxPop, int startingAge, int startingVilCount, ArrayList<Building> startingBuildings) {
         this.food = startingFood;
         this.wood = startingWood;
         this.gold = startingGold;
         this.stone = startingStone;
         this.maxPop = maxPop;
         this.startingAge = startingAge;
+        this.startingVilCount = startingVilCount;
+        this.startingBuildings = startingBuildings;
     }
 
     public void setFood(int food) {

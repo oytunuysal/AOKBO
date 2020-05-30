@@ -36,6 +36,10 @@ public class TechTree {
     Building SiegeWorkshop;
     Research BowSawResearch;
     Research WheelbarrowResearch;
+    
+    Unit MilitiaLine;
+    Research ManAtArms;
+    Research LongswordsMan;
 
     public TechTree() {
         allGameItems = new ArrayList<>();
@@ -58,12 +62,21 @@ public class TechTree {
 
         Barracks = new Building("Barracks", 0, 175, 0, 0, 0, 50);
         allGameItems.add(Barracks);
+        
+        MilitiaLine = new Unit("MilitiaLine", 60, 0, 20, 0, 21, 0, 0);
+        MilitiaLine.addPreRequisites(Barracks);
+        allGameItems.add(MilitiaLine);
 
         FeudalAgeResearch = new Research("FeudalAgeResearch", 500, 0, 0, 0, 0, 130);
         allGameItems.add(FeudalAgeResearch);
         FeudalAgeResearch.addPreRequisites(Barracks);
         FeudalAgeResearch.addPreRequisites(Mill);
         FeudalAgeResearch.addPreRequisites(LumberCamp);
+        
+        ManAtArms = new Research("Man at Arms", 100, 0, 45, 0, 0, 40);
+        ManAtArms.addPreRequisites(FeudalAgeResearch);
+        ManAtArms.addPreRequisites(Barracks);
+        allGameItems.add(ManAtArms);
 
         DoubleBitAxeResearch = new Research("Double-Bit Axe", 100, 50, 0, 0, 1, 25); //20% as template
         DoubleBitAxeResearch.addPreRequisites(FeudalAgeResearch);
@@ -107,6 +120,12 @@ public class TechTree {
         CastleAgeResearch.addPreRequisites(ArcheryRange);
         CastleAgeResearch.addPreRequisites(Stable);
         allGameItems.add(CastleAgeResearch);
+        
+        LongswordsMan = new Research("Long Swordsman", 200, 0, 65, 0, 0, 45);
+        LongswordsMan.addPreRequisites(CastleAgeResearch);
+        LongswordsMan.addPreRequisites(Barracks);
+        LongswordsMan.addPreRequisites(ManAtArms);
+        allGameItems.add(LongswordsMan);
 
         BodkinArrow = new Research("Bodkin Arrow", 200, 0, 100, 0, 0, 35);
         BodkinArrow.addPreRequisites(CastleAgeResearch);
