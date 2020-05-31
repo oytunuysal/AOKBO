@@ -7,6 +7,7 @@ package aokbo;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  *
@@ -21,8 +22,10 @@ public class Simulation {
     private TechTree techTree;
     ArrayList<Resource> resourceList;
     Tasker tasker;
-    ArrayList<Unit> villagerList;
-    ArrayList<Building> buildings;
+    LinkedList<Unit> villagerList;
+    ArrayList<Building> buildings; // instead of this, I can parse building into Barracks, TCS ect in constuctor.
+    ArrayList<Building> allTCs;
+    int inQ = 0;
 
     public Simulation(gameRules rules, TechTree techTree, ArrayList<Resource> resources) {
         this.totalWood = rules.getWood();
@@ -32,84 +35,194 @@ public class Simulation {
         this.techTree = techTree;
         this.resourceList = resources;
         this.tasker = new Tasker();
-        this.villagerList = new ArrayList<>();
+        this.tasker.addResourceList(resources);
+        this.villagerList = new LinkedList<>();
+        this.allTCs = new ArrayList<>();
         for (int i = 0; i < rules.startingVilCount; i++) {
-            this.villagerList.add(new Unit("Vil", 50, 0, 0, 0, 25, 0.8f, 10));
+            this.villagerList.push(new Unit("Vil", 50, 0, 0, 0, 25, 0.8f, 10));
         }
         this.buildings = (ArrayList<Building>) rules.startingBuildings.clone();
+
+        for (Building tc : buildings) {
+            if (tc.name.contains("TownCenter")) {
+                this.allTCs.add(tc);
+
+            }
+        }
 
     }
 
     public void Run(ArrayList buildOrder, int maxEstimatedTime) {
         int token = 1;
-        boolean lock = false;
+        boolean waitForResource = false;
         int ingameTime = 0;
         int temp;
         int nextInput1 = 0;
         int nextInput2 = 0;
         Iterator boIterator = buildOrder.iterator();
         while (ingameTime < maxEstimatedTime) {
-            if (token == 1) { //I may remove this if statement, it has almost no use now
-                if (lock == false) {
+            System.out.println("IngameSeconds = " + ingameTime);
+            if (token == 1 || token == 5) { //I may remove this if statement, it has almost no use now
+                if (waitForResource == false && token != 5) {
                     if (boIterator.hasNext()) {
                         temp = (int) boIterator.next();
+                        System.out.println("temp = " + temp);
                         nextInput1 = temp % 10; // last index of a number
+                        System.out.println("input1 = " + nextInput1);
                         nextInput2 = (temp - nextInput1) / 10; //cut out the last index of the number
+                        System.out.println("nextinput2 = " + nextInput2);
                     } else {
-                        return;
+                        System.out.println("Build order finished!");
+                        if (inQ == 0) {
+                            return;
+                        } else {
+                            token = 4;
+                        }
+
                     }
                 }
-                switch (nextInput1) {
-                    case 1:
-                        //build
-                        //no building time for now
-                        token = buildCommand(nextInput2);
-                        if (token == 2) { //token == 2 in front because of performance.
-                            lock = true;
-                            token = 1;
-                        } else if (token == 1) {
-                            lock = false;
-                        }
-                        break;
-                    case 2:
-                        //research
-                        //no research time and occupying building for now either.
-                        break;
-                    case 3:
-                        //produceUnit
-                        token = produceUnit(nextInput2);
-                        if (token == 2) { //token == 2 in front because of performance.
-                            lock = true;
-                            token = 1;
-                        } else if (token == 1) {
-                            lock = false;
-                        }
-                        break;
-                    case 0:
-                        System.out.println("ERROR!!!!!!!!");
-                        return;
+                if (token != 4) { //token = 4 only once bo finishes and something still in q
+                    switch (nextInput1) {
+                        case 1:
+                            System.out.println("                                                     1");
+                            token = villagerTaskCommand(nextInput2);
+                            if (token == 2) {
+                                waitForResource = true;
+                                token = 1;
+                            } else if (token == 5) {
+                                System.out.println("waiting for a villager to give the task!");
+                            } else if (token == 1) {
+                                waitForResource = false;
+                            }
+                            break;
+                        case 3:
+                            System.out.println("                                                     3");
+                            //build
+                            //no building time for now
+                            token = buildCommand(nextInput2);
+                            if (token == 2) { //token == 2 in front because of performance.
+                                waitForResource = true;
+                                token = 1;
+                            } else if (token == 1) {
+                                waitForResource = false;
+                            }
+                            break;
+                        case 4:
+                            System.out.println("                                                     4");
+                            //research
+                            token = researchCommand(nextInput2);
+                            if (token == 2) { //token == 2 in front because of performance.
+                                waitForResource = true;
+                                token = 1;
+                            } else if (token == 1) {
+                                waitForResource = false;
+                            }
+                            //no research time and occupying building for now either.
+                            break;
+                        case 2:
+                            System.out.println("                                                     2");
+                            //produceUnit
+                            token = produceUnit(nextInput2);
+                            if (token == 2) { //token == 2 in front because of performance.
+                                waitForResource = true;
+                                token = 1;
+                            } else if (token == 1) {
+                                waitForResource = false;
+                            }
+                            break;
+                        case 0:
+                            System.out.println("ERROR!!!!!!!!");
+                            return;
 
+                    }
                 }
+
             } else if (token == 3) {
-                System.out.println("not found ERROR!!!!!!!!");
+                System.out.println("invalid index ERROR!!!!!!!!");
+                return;
+            } else if (token == 4 && inQ == 0) {
                 return;
             }
             //call resource.clockwork
             resourceHandler();
-
+            //other time dependent stuff like researchs ect
+            timeDependent();
             ingameTime++;
+            System.out.println(this.totalWood + " " + this.totalFood + " " + this.totalGold + " " + this.totalStone);
+            System.out.println("inQ =                            " + inQ);
         }
 
+    }
+
+    private boolean hasEnoughResource(baseGameItem anItem) {
+        return anItem.getRequiredFood() <= totalFood && anItem.getRequiredWood() <= totalWood && anItem.getRequiredGold() <= totalGold && anItem.getRequiredStone() <= totalStone;
+    }
+
+    private void executeCost(baseGameItem anItem) {
+        totalFood -= anItem.getRequiredFood();
+        totalWood -= anItem.getRequiredWood();
+        totalGold -= anItem.getRequiredGold();
+        totalStone -= anItem.getRequiredStone();
+    }
+
+    private void timeDependent() { //executes run on each building with queue. then it applies the affect aswell
+        for (Building aBuilding : buildings) {
+            if (aBuilding.runQueue()) { // runqueue returns true only if the queue completes and reutrns only once.
+                inQ--;
+                baseGameItem unitOrResearch = aBuilding.returnFromQueue();
+                if (unitOrResearch instanceof Research) {
+                    timeDependentResearch((Research) unitOrResearch); //applies the research on resources
+                } else if (unitOrResearch instanceof Unit) {
+                    System.out.println("++++++++++++");
+                    timeDependentProduction((Unit) unitOrResearch);
+                    //if it is a villager, adds on villagerList.
+                }
+            }
+        }
+        /*
+        for (Building aTC : allTCs) {
+            if (aTC.runQueue()) {
+                inQ--;
+
+            }
+        }*/
+    }
+
+    private void timeDependentProduction(Unit vilOrMil) { //if its a vil, adds on vil-list.
+        if (vilOrMil.getName().equalsIgnoreCase("Vil")) {
+            villagerList.add(vilOrMil);
+        }
+        System.out.println(vilOrMil.getName() + " created!");
+
+    }
+
+    private void timeDependentResearch(Research aResearch) { // if its a research, 
+        for (Resource aResource : resourceList) {
+            for (Research.UpgradeAffect anAffect : ((Research) aResearch).upgradeAffects) {
+                if (anAffect.getResourceType() == 0) {
+                    ((Research) aResearch).applyResearch(aResource);
+                } else if (anAffect.getResourceType() == aResource.getSourceType()) {
+                    aResearch.applyResearch(aResource);
+                }
+            }
+
+        }
     }
 
     private int researchCommand(int index) {
         switch (index) {
             case 1:
                 if (hasEnoughResource(techTree.ManAtArms)) {
-                    totalFood -= techTree.ManAtArms.getRequiredFood();
-                    totalGold -= techTree.ManAtArms.getRequiredGold();
+                    boolean hasFound = false;
+                    executeCost(techTree.ManAtArms);
                     //maybe apply method here
-                    return 1;
+                    hasFound = putIntoQueue("Barracks", techTree.ManAtArms);
+                    if (hasFound) {
+                        return 1;
+                    } else {
+                        System.out.println("No space in queue");
+                        return 1;
+                    }
                 } else {
                     return 2;
                 }
@@ -119,9 +232,10 @@ public class Simulation {
 
     private int buildCommand(int index) {
         switch (index) {
-            case 1:
+            case 2:
                 if (hasEnoughResource(techTree.Barracks)) {
-                    totalWood -= techTree.Barracks.getRequiredWood();
+                    executeCost(techTree.Barracks);
+                    buildings.add(techTree.Barracks);
                     return 1;
                 } else {
                     return 2;
@@ -130,36 +244,25 @@ public class Simulation {
         return 3;
     }
 
-    private int produceUnit(int target) {
-        /* 
-        1-militia
-         */
-
- /* return values:
-            1-success
-            2- need to wait for resource
-         */
-        switch (target) {
-            case 1: //militia line
-                if (true) { //if building exist and available then we check the rest
-                    if (hasEnoughResource(techTree.MilitiaLine)) {
-                        totalFood -= techTree.MilitiaLine.getRequiredFood();
-                        totalWood -= techTree.MilitiaLine.getRequiredWood();
-                        totalGold -= techTree.MilitiaLine.getRequiredGold();
-                        totalStone -= techTree.MilitiaLine.getRequiredStone();
-                        return 1;
-                    } else {
-                        return 2;
-                    }
+    private boolean putIntoQueue(String name, baseGameItem aUnit) {
+        boolean hasFound = false;
+        Building temp = null;
+        int maxq = 100;
+        for (Building building : buildings) {
+            if (building.name.contains(name)) {
+                if (building.getInQueueCount() < maxq) {
+                    temp = building;
+                    maxq = building.getInQueueCount();
                 }
+            }
 
         }
-        return 3; //cant find the unit
-
-    }
-
-    private boolean hasEnoughResource(baseGameItem anItem) {
-        return anItem.getRequiredFood() <= totalFood && anItem.getRequiredWood() <= totalWood && anItem.getRequiredGold() <= totalGold && anItem.getRequiredStone() <= totalStone;
+        if (temp != null) {
+            temp.addQueue(aUnit);
+            hasFound = true;
+            inQ++;
+        }
+        return hasFound;
     }
 
     private void resourceHandler() {//I will turn this into a class later
@@ -211,5 +314,92 @@ public class Simulation {
             }
 
         }
+    }
+
+    private int produceUnit(int target) {
+        /* 
+        1-militia
+         */
+
+ /* return values:
+            1-success
+            2- need to wait for resource
+         */
+        switch (target) {
+            case 1:
+                if (true) {
+                    if (hasEnoughResource(techTree.Villager)) {
+                        executeCost(techTree.Villager);
+                        boolean hasFound = false;
+                        hasFound = putIntoQueue("TownCenter", new Unit("Vil", 50, 0, 0, 0, 25, 0.8f, 10));
+                        if (hasFound) {
+                            return 1;
+                        } //else put into 
+                        else {
+                            System.out.println("No space in queue");
+                            return 1;
+                        }
+                    } else {
+                        return 2;
+                    }
+                }
+            case 2: //militia line
+                if (true) { //if building exist and available then we check the rest
+                    if (hasEnoughResource(techTree.MilitiaLine)) {
+                        boolean hasFound = false;
+                        executeCost(techTree.MilitiaLine);
+                        hasFound = putIntoQueue("Barracks", techTree.MilitiaLine);
+                        if (hasFound) {
+                            return 1;
+                        } //else put into 
+                        else {
+                            System.out.println("No space in queue");
+                            return 1;
+                        }
+
+                    } else {
+                        return 2;
+                    }
+                }
+
+        }
+        return 3; //cant find the unit
+
+    }
+
+    public int villagerTaskCommand(int task) {
+        Building temp = null;
+        if (!villagerList.isEmpty()) {
+            tasker.addVilTask(villagerList.pop(), task);
+            return 1;
+        } else {
+            for (Building aTC : allTCs) {
+                if (!aTC.isAvailable()) {
+                    if (aTC.getCurrentQIName().contains("Vil")) {
+
+                        return 5; //maybe put something else here for multiq on vils
+                    }
+                } else {
+                    temp = aTC;
+                }
+            }
+            if (temp != null) {
+                int a = produceUnit(1);
+                if (a == 1) {
+                    return 5;
+                } else if (a == 2) {
+                    return 2;
+                }
+
+                //if (hasEnoughResource(techTree.Villager)) {
+                //    temp.addQueue(new Unit("Vil", 50, 0, 0, 0, 25, 0.8f, 10));
+                //    inQ++;
+                //    return 5;
+                //} else {
+                //    return 2;
+                //}
+            }
+        }
+        return 0; //not sure about here
     }
 }

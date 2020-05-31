@@ -36,7 +36,9 @@ public class TechTree {
     Building SiegeWorkshop;
     Research BowSawResearch;
     Research WheelbarrowResearch;
-    
+
+    Unit Villager;
+
     Unit MilitiaLine;
     Research ManAtArms;
     Research LongswordsMan;
@@ -62,7 +64,7 @@ public class TechTree {
 
         Barracks = new Building("Barracks", 0, 175, 0, 0, 0, 50);
         allGameItems.add(Barracks);
-        
+
         MilitiaLine = new Unit("MilitiaLine", 60, 0, 20, 0, 21, 0, 0);
         MilitiaLine.addPreRequisites(Barracks);
         allGameItems.add(MilitiaLine);
@@ -72,7 +74,7 @@ public class TechTree {
         FeudalAgeResearch.addPreRequisites(Barracks);
         FeudalAgeResearch.addPreRequisites(Mill);
         FeudalAgeResearch.addPreRequisites(LumberCamp);
-        
+
         ManAtArms = new Research("Man at Arms", 100, 0, 45, 0, 0, 40);
         ManAtArms.addPreRequisites(FeudalAgeResearch);
         ManAtArms.addPreRequisites(Barracks);
@@ -81,13 +83,13 @@ public class TechTree {
         DoubleBitAxeResearch = new Research("Double-Bit Axe", 100, 50, 0, 0, 1, 25); //20% as template
         DoubleBitAxeResearch.addPreRequisites(FeudalAgeResearch);
         DoubleBitAxeResearch.addPreRequisites(LumberCamp);
-        DoubleBitAxeResearch.addUpgradeAffect(1,20);
-        
+        DoubleBitAxeResearch.addUpgradeAffect(1, 1, 20);
+
         WheelbarrowResearch = new Research("Wheelbarrow", 175, 50, 0, 0, 1, 75);
         WheelbarrowResearch.addPreRequisites(FeudalAgeResearch);
         WheelbarrowResearch.addPreRequisites(TownCenter);
-        WheelbarrowResearch.addUpgradeAffect(3, 25); //carry cap
-        WheelbarrowResearch.addUpgradeAffect(2, 10); //movement speed
+        WheelbarrowResearch.addUpgradeAffect(0, 3, 25); //carry cap
+        WheelbarrowResearch.addUpgradeAffect(0, 2, 10); //movement speed
 
         Blacksmith = new Building("Blacksmith", 0, 150, 0, 0, 1, 40);
         Blacksmith.addPreRequisites(FeudalAgeResearch);
@@ -120,7 +122,7 @@ public class TechTree {
         CastleAgeResearch.addPreRequisites(ArcheryRange);
         CastleAgeResearch.addPreRequisites(Stable);
         allGameItems.add(CastleAgeResearch);
-        
+
         LongswordsMan = new Research("Long Swordsman", 200, 0, 65, 0, 0, 45);
         LongswordsMan.addPreRequisites(CastleAgeResearch);
         LongswordsMan.addPreRequisites(Barracks);
@@ -136,12 +138,16 @@ public class TechTree {
         SiegeWorkshop.addPreRequisites(CastleAgeResearch);
         SiegeWorkshop.addPreRequisites(Blacksmith);
         allGameItems.add(SiegeWorkshop);
-        
+
         BowSawResearch = new Research("Bow Saw", 150, 100, 0, 0, 2, 50);
         BowSawResearch.addPreRequisites(CastleAgeResearch);
         BowSawResearch.addPreRequisites(DoubleBitAxeResearch);
-        BowSawResearch.addUpgradeAffect(1, 20);
+        BowSawResearch.addUpgradeAffect(1, 1, 20);
         allGameItems.add(BowSawResearch);
+
+        Villager = new Unit("Vil", 50, 0, 0, 0, 25, 0.8f, 10);
+        Villager.addPreRequisites(TownCenter);
+        allGameItems.add(Villager);
 
         //...
         TownCenter.addPreRequisites(CastleAgeResearch);
@@ -233,4 +239,5 @@ public class TechTree {
             }
         }
     }
+
 }

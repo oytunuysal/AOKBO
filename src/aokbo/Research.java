@@ -29,20 +29,19 @@ public class Research extends baseGameItem {
     2-walking speed
     3-carry capacity
      */
-    
     public Research(String name, int food, int wood, int gold, int stone, int age, int time) {
         super(name, food, wood, gold, stone, age, time);
         this.upgradeAffects = new ArrayList<>();
         //this.gatherRateFactor = gatherRateFactor;
         //this.upgradeType = upgradeType;
     }
-    
-    public void addUpgradeAffect(int type, int factor) { //factor is actually float..
-        upgradeAffects.add(new UpgradeAffect(type, factor));
+
+    public void addUpgradeAffect(int resourceType, int type, int factor) { //factor is actually float..
+        upgradeAffects.add(new UpgradeAffect(resourceType, type, factor));
     }
-    
+
     public void applyResearch(Resource aResource) {
-        
+
         for (Iterator<UpgradeAffect> iterator = upgradeAffects.iterator(); iterator.hasNext();) {
             UpgradeAffect next = iterator.next();
             switch (next.upgradeType) {
@@ -59,9 +58,9 @@ public class Research extends baseGameItem {
                     aResource.changeCarryCap(next.gatherRateFactor);
                     break;
             }
-            
+
         }
-        
+
     }
 
     //private void applyEcoResearch(Resource aResource) {
@@ -78,13 +77,24 @@ public class Research extends baseGameItem {
     // }
     //or private ?
     public class UpgradeAffect {
-        
+        int resourceType;
         int upgradeType;
         float gatherRateFactor;
-        
-        public UpgradeAffect(int type, int factor) {
+
+        /*
+        1-wood
+        2-food
+        3-gold
+        4-stone
+         */
+        public UpgradeAffect(int resourceType, int type, int factor) {
+            this.resourceType = resourceType;
             this.upgradeType = type;
             this.gatherRateFactor = factor;
+        }
+        
+        public int getResourceType(){
+            return resourceType;
         }
     }
 }

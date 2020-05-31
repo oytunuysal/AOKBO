@@ -18,12 +18,41 @@ public class AOKBO {
      */
     public static void main(String[] args) {
 
-        tryCaseFood();
+        tryCaseRun();
+        //tryCaseFood();
         //tryCaseDeer();
         //tryCaseWheelbarrow();
         //tryCaseTechtree();
         //tryCaseResources();
         //tryCaseResourcesAddVilsByTime();
+
+    }
+
+    public static void tryCaseRun() {
+        TechTree techTree = new TechTree();
+        ArrayList<Building> buildings = new ArrayList<>();
+        ArrayList<Resource> resources = new ArrayList<>();
+        buildings.add(techTree.TownCenter);
+        gameRules gameRules1 = new gameRules(300, 200, 500, 300, 200, 0, 3, buildings);
+        resources.add(new Resource(2, "Hunt without mill1", 0.408f, 30, 800, 35, 16));
+        resources.add(new Resource(2, "Berry", 0.310f, 30, 800, 10, 8));
+        resources.add(new Resource(2, "Sheep", 0.330f, 30, 800, 10, 0));
+        resources.add(new Resource(1, "Wood", 0.310f, 30, 5000, 10, 8));
+        Simulation firstSimulation = new Simulation(gameRules1, techTree, resources);
+        ArrayList<Integer> buildOrder = new ArrayList();
+        buildOrder.add(21);
+        buildOrder.add(21);
+        buildOrder.add(21);
+        buildOrder.add(21);
+        buildOrder.add(21);
+        buildOrder.add(21);
+        buildOrder.add(11);
+        buildOrder.add(11);
+        buildOrder.add(11);
+        buildOrder.add(23);
+        buildOrder.add(22);
+        buildOrder.add(22);
+        firstSimulation.Run(buildOrder, 1000);
 
     }
 
