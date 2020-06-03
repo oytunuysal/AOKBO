@@ -27,6 +27,10 @@ public class Building extends baseGameItem {
         this.currentQueueItem = null;
         this.inQueueItems = new LinkedList<>();
     }
+    
+    public Building getNew(){
+        return new Building(super.name, super.requiredFood, super.requiredWood, super.requiredGold, super.requiredStone, super.requiredAge, super.creationTime);
+    }
 
     public boolean isAvailable() {
         return available;

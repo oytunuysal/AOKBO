@@ -60,7 +60,7 @@ public class Resource {
         // carry cap = 13 for starting point
         //finalGatherRate = 13 / (walkingTime() + (13 / gatherRate));
         finalGatherRate = carryCapacity / (walkingTime() + (carryCapacity / gatherRate));
-        System.out.println("Final gather rate = " + finalGatherRate);
+        //System.out.println("Final gather rate = " + finalGatherRate);
     }
 
     public float walkingTime() {
@@ -73,9 +73,9 @@ public class Resource {
     }
 
     public void changeCarryCap(float factor) {
-        System.out.println("before affect : " + carryCapacity);
+        //System.out.println("before affect : " + carryCapacity);
         carryCapacity += (factor / 100) * carryCapacity;
-        System.out.println("after affect : " + carryCapacity);
+        //System.out.println("after affect : " + carryCapacity);
         calculateFinalGatherRate();
     }
 
@@ -85,7 +85,8 @@ public class Resource {
     public boolean currentState() {
         return state;
     }
-    public boolean hasDepleted(){
+
+    public boolean hasDepleted() {
         return hasDepleted;
     }
 
@@ -98,14 +99,14 @@ public class Resource {
     }
 
     public void changeWalkingDistanceFactor(float factor) {
-        System.out.println("before affect : " + walkingDistanceFactor);
+        //System.out.println("before affect : " + walkingDistanceFactor);
         walkingDistanceFactor += (factor / 100) * walkingDistanceFactor; //not sure about this
-        System.out.println("After : " + walkingDistanceFactor);
+        //System.out.println("After : " + walkingDistanceFactor);
         calculateFinalGatherRate();
     }
 
     public void changeGatherRate(float factor) {
-        System.out.println("Factor/100 = " + factor / 100);
+        //System.out.println("Factor/100 = " + factor / 100);
         gatherRate += (factor / 100) * baseGatherRate;
         calculateFinalGatherRate();
     }
@@ -124,22 +125,36 @@ public class Resource {
     }
 
     public Unit removeWorker() {
-        Unit tempUnit = workerArrayList.get(currentWorkerNumber-1);
-        workerArrayList.remove(currentWorkerNumber-1);
+        Unit tempUnit = workerArrayList.get(currentWorkerNumber - 1);
+        workerArrayList.remove(currentWorkerNumber - 1);
         currentWorkerNumber--; //need to put an error check here.
         return tempUnit;
     }
 
     public ArrayList<Unit> removeAllWorker() {
         ArrayList<Unit> tempList = new ArrayList<>();
-        while(!workerArrayList.isEmpty()){
+        while (!workerArrayList.isEmpty()) {
             tempList.add(removeWorker());
         }
         return tempList;
     }
 
+    public float differenceAfterBuilding() {
+        float resourcePerVil, time, newGRwithoutECO, newGRwithECO;
+        resourcePerVil = totalResourceLeft / (currentWorkerNumber);
+        time = resourcePerVil / finalGatherRate;
+        time += distanceGatherPoint / walkingDistanceFactor; //deploy time
+        newGRwithoutECO = resourcePerVil / time;
+
+        resourcePerVil = totalResourceLeft / (currentWorkerNumber);
+        time = resourcePerVil / finalGatherRate;
+        time += distanceGatherPoint / walkingDistanceFactor; //deploy time
+        newGRwithECO = resourcePerVil / time;
+        return newGRwithECO - newGRwithoutECO;
+    }
+
     public float clockWork() {
-        if (currentState() == true) {
+        if (currentState() == true && currentWorkerNumber > 0) {
             resourcesProduced = finalGatherRate * currentWorkerNumber;
             totalResourceLeft -= resourcesProduced;
             if (totalResourceLeft <= 0) {
@@ -147,7 +162,7 @@ public class Resource {
                 resourcesProduced += totalResourceLeft;
                 state = false;
                 totalResourceLeft = 0;
-                System.out.println(name + " depleted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                //System.out.println(name + " depleted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             }
             //if total resources left becomes 0 or negative, call a function the inform.
             return resourcesProduced;

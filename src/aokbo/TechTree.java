@@ -21,6 +21,7 @@ public class TechTree {
     Research DarkAgeResearch;
     Building Mill;
     Building LumberCamp;
+    Building MiningCamp;
     Building TownCenter;
     Research Loom;
     Building Barracks;
@@ -55,6 +56,9 @@ public class TechTree {
 
         LumberCamp = new Building("Lumber Camp", 0, 100, 0, 0, 0, 35);
         allGameItems.add(LumberCamp);
+
+        MiningCamp = new Building("Mining Camp", 0, 100, 0, 0, 0, 35);
+        allGameItems.add(MiningCamp);
 
         TownCenter = new Building("TownCenter", 0, 275, 0, 100, 2, 150);
         allGameItems.add(TownCenter);

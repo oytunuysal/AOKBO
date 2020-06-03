@@ -15,7 +15,7 @@ public class Unit extends baseGameItem{
     //public baseGameItem baseUnit;
 
     public Unit(String name, int food, int wood, int gold, int age, int time, float walkingSpeed, int carryCap) {
-        super(name, food, wood, 0, gold, age, time);
+        super(name, food, wood, gold, 0, age, time);
         this.walkingSpeed = walkingSpeed;
         this.carryCapacity = carryCap;
     }

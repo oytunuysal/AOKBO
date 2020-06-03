@@ -23,7 +23,7 @@ public class baseGameItem {
         this.creationTime = creationTime;
         this.requiredAge = requiredAge;
         this.requiredFood = requiredFood;
-        this.requiredWood = requiredGold;
+        this.requiredGold = requiredGold;
         this.requiredStone = requiredStone;
         this.requiredWood = requiredWood;
     }

@@ -46,7 +46,7 @@ public class Research extends baseGameItem {
             UpgradeAffect next = iterator.next();
             switch (next.upgradeType) {
                 case 0:
-                    System.out.println("aokbo.Research.applyResearch() its not an Economic Research");
+                    //System.out.println("aokbo.Research.applyResearch() its not an Economic Research");
                     break;
                 case 1:
                     aResource.changeGatherRate(next.gatherRateFactor);

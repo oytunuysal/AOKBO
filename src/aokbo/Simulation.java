@@ -26,8 +26,10 @@ public class Simulation {
     ArrayList<Building> buildings; // instead of this, I can parse building into Barracks, TCS ect in constuctor.
     ArrayList<Building> allTCs;
     int inQ = 0;
+    //gameRules savedRules;
 
     public Simulation(gameRules rules, TechTree techTree, ArrayList<Resource> resources) {
+        //this.savedRules = rules;
         this.totalWood = rules.getWood();
         this.totalFood = rules.getFood();
         this.totalGold = rules.getGold();
@@ -52,7 +54,7 @@ public class Simulation {
 
     }
 
-    public void Run(ArrayList buildOrder, int maxEstimatedTime) {
+    public int Run(ArrayList buildOrder, int maxEstimatedTime) {
         int token = 1;
         boolean waitForResource = false;
         int ingameTime = 0;
@@ -61,20 +63,21 @@ public class Simulation {
         int nextInput2 = 0;
         Iterator boIterator = buildOrder.iterator();
         while (ingameTime < maxEstimatedTime) {
-            System.out.println("IngameSeconds = " + ingameTime);
+            //System.out.println("IngameSeconds = " + ingameTime);
             if (token == 1 || token == 5) { //I may remove this if statement, it has almost no use now
                 if (waitForResource == false && token != 5) {
                     if (boIterator.hasNext()) {
                         temp = (int) boIterator.next();
-                        System.out.println("temp = " + temp);
+                        //System.out.println("temp = " + temp);
                         nextInput1 = temp % 10; // last index of a number
-                        System.out.println("input1 = " + nextInput1);
+                        //System.out.println("input1 = " + nextInput1);
                         nextInput2 = (temp - nextInput1) / 10; //cut out the last index of the number
-                        System.out.println("nextinput2 = " + nextInput2);
+                        //System.out.println("nextinput2 = " + nextInput2);
                     } else {
-                        System.out.println("Build order finished!");
+                        //System.out.println("Build order finished!");
                         if (inQ == 0) {
-                            return;
+                            System.out.println("Fitness " + ingameTime);
+                            return ingameTime;
                         } else {
                             token = 4;
                         }
@@ -84,19 +87,19 @@ public class Simulation {
                 if (token != 4) { //token = 4 only once bo finishes and something still in q
                     switch (nextInput1) {
                         case 1:
-                            System.out.println("                                                     1");
+                            //System.out.println("                                                     1");
                             token = villagerTaskCommand(nextInput2);
                             if (token == 2) {
                                 waitForResource = true;
                                 token = 1;
                             } else if (token == 5) {
-                                System.out.println("waiting for a villager to give the task!");
+                                //System.out.println("waiting for a villager to give the task!");
                             } else if (token == 1) {
                                 waitForResource = false;
                             }
                             break;
                         case 3:
-                            System.out.println("                                                     3");
+                            //System.out.println("                                                     3");
                             //build
                             //no building time for now
                             token = buildCommand(nextInput2);
@@ -108,7 +111,7 @@ public class Simulation {
                             }
                             break;
                         case 4:
-                            System.out.println("                                                     4");
+                            //System.out.println("                                                     4");
                             //research
                             token = researchCommand(nextInput2);
                             if (token == 2) { //token == 2 in front because of performance.
@@ -120,7 +123,7 @@ public class Simulation {
                             //no research time and occupying building for now either.
                             break;
                         case 2:
-                            System.out.println("                                                     2");
+                            //System.out.println("                                                     2");
                             //produceUnit
                             token = produceUnit(nextInput2);
                             if (token == 2) { //token == 2 in front because of performance.
@@ -131,38 +134,83 @@ public class Simulation {
                             }
                             break;
                         case 0:
-                            System.out.println("ERROR!!!!!!!!");
-                            return;
+                            //System.out.println("ERROR!!!!!!!!");
+                            //return maxEstimatedTime;
+                            System.out.println("Fitness                                " + ingameTime + " " + totalWood + " " + totalFood + " " + totalGold + " " + totalStone);
+                            return ingameTime;
 
                     }
                 }
 
             } else if (token == 3) {
-                System.out.println("invalid index ERROR!!!!!!!!");
-                return;
+                //System.out.println("invalid index ERROR!!!!!!!!");
+                return maxEstimatedTime;
             } else if (token == 4 && inQ == 0) {
-                return;
+                System.out.println("Fitness                                       " + ingameTime + " " + totalWood + " " + totalFood + " " + totalGold + " " + totalStone);
+                return ingameTime;
             }
             //call resource.clockwork
             resourceHandler();
             //other time dependent stuff like researchs ect
             timeDependent();
             ingameTime++;
-            System.out.println(this.totalWood + " " + this.totalFood + " " + this.totalGold + " " + this.totalStone);
-            System.out.println("inQ =                            " + inQ);
+            //System.out.println("W: " + this.totalWood + " " + "F: " + this.totalFood + " " + "G: " + this.totalGold + " " + "S: " + this.totalStone);
+            //System.out.println("inQ =                            " + inQ);
+        }
+        System.out.println("Fitness " + ingameTime);
+        return maxEstimatedTime - ingameTime;
+
+    }
+
+    private void assignEcoBuilding(Building building) {
+        float bestGR = 0, temp = 0;
+        Resource tempResource = null;
+        if (building.name.contains("Mill")) {
+            for (Resource aResource : resourceList) {
+                if (aResource.sourceType == 2) {
+                    temp = aResource.differenceAfterBuilding();
+                    if (temp > bestGR) {
+                        bestGR = temp;
+                        tempResource = aResource;
+                    }
+                }
+            }
+        } else if (building.name.contains("Lumber Camp")) {
+            for (Resource aResource : resourceList) {
+                if (aResource.sourceType == 1) {
+                    temp = aResource.differenceAfterBuilding();
+                    if (temp > bestGR) {
+                        bestGR = temp;
+                        tempResource = aResource;
+                    }
+                }
+            }
+        } else if (building.name.contains("Mining Camp")) {
+            for (Resource aResource : resourceList) {
+                if (aResource.sourceType == 3 || aResource.sourceType == 4) {
+                    temp = aResource.differenceAfterBuilding();
+                    if (temp > bestGR) {
+                        bestGR = temp;
+                        tempResource = aResource;
+                    }
+                }
+            }
         }
 
+        if (tempResource != null) {
+            tempResource.addBuilding(building);
+        }
     }
 
     private boolean hasEnoughResource(baseGameItem anItem) {
-        return anItem.getRequiredFood() <= totalFood && anItem.getRequiredWood() <= totalWood && anItem.getRequiredGold() <= totalGold && anItem.getRequiredStone() <= totalStone;
+        return (anItem.getRequiredFood() <= totalFood && anItem.getRequiredWood() <= totalWood && anItem.getRequiredGold() <= totalGold && anItem.getRequiredStone() <= totalStone);
     }
 
     private void executeCost(baseGameItem anItem) {
-        totalFood -= anItem.getRequiredFood();
-        totalWood -= anItem.getRequiredWood();
-        totalGold -= anItem.getRequiredGold();
-        totalStone -= anItem.getRequiredStone();
+        totalFood = totalFood - anItem.getRequiredFood();
+        totalWood = totalWood - anItem.getRequiredWood();
+        totalGold = totalGold - anItem.getRequiredGold();
+        totalStone = totalStone - anItem.getRequiredStone();
     }
 
     private void timeDependent() { //executes run on each building with queue. then it applies the affect aswell
@@ -173,7 +221,6 @@ public class Simulation {
                 if (unitOrResearch instanceof Research) {
                     timeDependentResearch((Research) unitOrResearch); //applies the research on resources
                 } else if (unitOrResearch instanceof Unit) {
-                    System.out.println("++++++++++++");
                     timeDependentProduction((Unit) unitOrResearch);
                     //if it is a villager, adds on villagerList.
                 }
@@ -192,7 +239,7 @@ public class Simulation {
         if (vilOrMil.getName().equalsIgnoreCase("Vil")) {
             villagerList.add(vilOrMil);
         }
-        System.out.println(vilOrMil.getName() + " created!");
+        //System.out.println(vilOrMil.getName() + " created!");
 
     }
 
@@ -212,6 +259,7 @@ public class Simulation {
     private int researchCommand(int index) {
         switch (index) {
             case 1:
+
                 if (hasEnoughResource(techTree.ManAtArms)) {
                     boolean hasFound = false;
                     executeCost(techTree.ManAtArms);
@@ -220,7 +268,67 @@ public class Simulation {
                     if (hasFound) {
                         return 1;
                     } else {
-                        System.out.println("No space in queue");
+                        //System.out.println("No space in queue");
+                        return 1;
+                    }
+                } else {
+                    return 2;
+                }
+            case 2:
+                if (hasEnoughResource(techTree.DoubleBitAxeResearch)) {
+                    boolean hasFound = false;
+                    executeCost(techTree.DoubleBitAxeResearch);
+                    //maybe apply method here
+                    hasFound = putIntoQueue("Lumber Camp", techTree.DoubleBitAxeResearch);
+                    if (hasFound) {
+                        return 1;
+                    } else {
+                        //System.out.println("No space in queue");
+                        return 1;
+                    }
+                } else {
+                    return 2;
+                }
+            case 3:
+                if (hasEnoughResource(techTree.WheelbarrowResearch)) {
+                    boolean hasFound = false;
+                    executeCost(techTree.WheelbarrowResearch);
+                    //maybe apply method here
+                    hasFound = putIntoQueue("TownCenter", techTree.WheelbarrowResearch);
+                    if (hasFound) {
+                        return 1;
+                    } else {
+                        //System.out.println("No space in queue");
+                        return 1;
+                    }
+                } else {
+                    return 2;
+                }
+            case 4:
+                if (hasEnoughResource(techTree.FeudalAgeResearch)) {
+                    boolean hasFound = false;
+                    executeCost(techTree.FeudalAgeResearch);
+                    //maybe apply method here
+                    hasFound = putIntoQueue("TownCenter", techTree.FeudalAgeResearch);
+                    if (hasFound) {
+                        return 1;
+                    } else {
+                        //System.out.println("No space in queue");
+                        return 1;
+                    }
+                } else {
+                    return 2;
+                }
+            case 5:
+                if (hasEnoughResource(techTree.CastleAgeResearch)) {
+                    boolean hasFound = false;
+                    executeCost(techTree.CastleAgeResearch);
+                    //maybe apply method here
+                    hasFound = putIntoQueue("TownCenter", techTree.CastleAgeResearch);
+                    if (hasFound) {
+                        return 1;
+                    } else {
+                        //System.out.println("No space in queue");
                         return 1;
                     }
                 } else {
@@ -235,11 +343,61 @@ public class Simulation {
             case 2:
                 if (hasEnoughResource(techTree.Barracks)) {
                     executeCost(techTree.Barracks);
-                    buildings.add(techTree.Barracks);
+                    buildings.add(techTree.Barracks.getNew());
                     return 1;
                 } else {
                     return 2;
                 }
+            case 3:
+                if (hasEnoughResource(techTree.LumberCamp)) {
+                    executeCost(techTree.LumberCamp);
+                    buildings.add(techTree.LumberCamp.getNew());
+                    if (buildings != null && !buildings.isEmpty()) {
+                        assignEcoBuilding(buildings.get(buildings.size() - 1));
+                    }
+                    return 1;
+                } else {
+                    return 2;
+                }
+            case 4:
+                if (hasEnoughResource(techTree.Mill)) {
+                    executeCost(techTree.Mill);
+                    buildings.add(techTree.Mill.getNew());
+                    if (buildings != null && !buildings.isEmpty()) {
+                        assignEcoBuilding(buildings.get(buildings.size() - 1));
+                    }
+                    return 1;
+                } else {
+                    return 2;
+                }
+            case 5:
+                if (hasEnoughResource(techTree.MiningCamp)) {
+                    executeCost(techTree.MiningCamp);
+                    buildings.add(techTree.MiningCamp.getNew());
+                    if (buildings != null && !buildings.isEmpty()) {
+                        assignEcoBuilding(buildings.get(buildings.size() - 1));
+                    }
+                    return 1;
+                } else {
+                    return 2;
+                }
+            case 6:
+                if (hasEnoughResource(techTree.Blacksmith)) {
+                    executeCost(techTree.Blacksmith);
+                    buildings.add(techTree.Blacksmith.getNew());
+                    return 1;
+                } else {
+                    return 2;
+                }
+            case 7:
+                if (hasEnoughResource(techTree.Market)) {
+                    executeCost(techTree.Market);
+                    buildings.add(techTree.Market.getNew());
+                    return 1;
+                } else {
+                    return 2;
+                }
+
         }
         return 3;
     }
@@ -336,7 +494,7 @@ public class Simulation {
                             return 1;
                         } //else put into 
                         else {
-                            System.out.println("No space in queue");
+                            //System.out.println("No space in queue");
                             return 1;
                         }
                     } else {
@@ -353,7 +511,7 @@ public class Simulation {
                             return 1;
                         } //else put into 
                         else {
-                            System.out.println("No space in queue");
+                            //System.out.println("No space in queue");
                             return 1;
                         }
 

@@ -70,8 +70,8 @@ public class Tasker { //This is a sort of adapter class.
             }
         }
         if (temp != null) {
-            System.out.println("newGR = " + max + " Name = " + temp.name);
-            System.out.println("Walking time = " + temp.walkingTime());
+            //System.out.println("newGR = " + max + " Name = " + temp.name);
+            //System.out.println("Walking time = " + temp.walkingTime());
         }
 
         return temp;
@@ -85,7 +85,7 @@ public class Tasker { //This is a sort of adapter class.
         if (temp != null) {
             temp.addWorker(gatherer);
         }else{
-            System.out.println("No more space for that job!");
+            //System.out.println("No more space for that job!");
         }
     }
 
