@@ -18,7 +18,6 @@ public class Resource {
     String name;
     int sourceType;
     float finalGatherRate;
-    // float efficiency;
     float gatherRate; // gatherrate/second
     float baseGatherRate;  //never changes
     float distanceGatherPoint;
@@ -32,7 +31,7 @@ public class Resource {
     float resourcesProduced;
     int baseCarryCapacity;
     int carryCapacity;
-    //deploy time for new vil?
+    // havent implemented deploy time for new vils yet
     //farms missing
     //ingame reveal/scout time(for example it will take some time to find boars ingame)
 
@@ -79,9 +78,6 @@ public class Resource {
         calculateFinalGatherRate();
     }
 
-    //private float efficiencyCalculator() {
-    //  return efficiency;
-    //}
     public boolean currentState() {
         return state;
     }

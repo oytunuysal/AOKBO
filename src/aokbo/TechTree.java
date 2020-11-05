@@ -37,6 +37,7 @@ public class TechTree {
     Building SiegeWorkshop;
     Research BowSawResearch;
     Research WheelbarrowResearch;
+    Research ImperialAgeResearch;
 
     Unit Villager;
 
@@ -47,7 +48,7 @@ public class TechTree {
     public TechTree() {
         allGameItems = new ArrayList<>();
 
-        //all researchs buildings
+        //all researches, buildings and units
         DarkAgeResearch = new Research("DarkAgeResearch", 0, 0, 0, 0, 0, 0);
         allGameItems.add(DarkAgeResearch);
 
@@ -152,6 +153,10 @@ public class TechTree {
         Villager = new Unit("Vil", 50, 0, 0, 0, 25, 0.8f, 10);
         Villager.addPreRequisites(TownCenter);
         allGameItems.add(Villager);
+        
+        ImperialAgeResearch = new Research("ImperialAgeResearch", 1000, 0, 800, 0, 0, 190);
+        ImperialAgeResearch.addPreRequisites(TownCenter);
+        allGameItems.add(ImperialAgeResearch);
 
         //...
         TownCenter.addPreRequisites(CastleAgeResearch);
@@ -162,23 +167,13 @@ public class TechTree {
             allGameItems.get(i).listPrerequisiteNames();
         }
 
-        //listing each item with it prerequisites
-        //for (int i = 0; i < allGameItems.size(); i++) {
-        //   System.out.println(allGameItems.get(i).preRequisites.);
-        // }
+
         System.out.println();
         System.out.println();
         System.out.println();
         System.out.println();
 
-        //AOKBO targetAokbo = new AOKBO();
-        //targetAokbo.listingAllReq(SiegeWorkshop);
-        // listingAllReq(BodkinArrow);
-        // totalWoodCost(BodkinArrow);
-        // System.out.println();
-        // System.out.println();
-        //  System.out.println();
-        // System.out.println();
+
     }
 
     public void clearAllReq() {
@@ -189,7 +184,6 @@ public class TechTree {
     public void listingAllReq(baseGameItem target) {
         for (int i = 0; i < target.getPrerequisites().size(); i++) {
             //System.out.println(target.getPrerequisiteName(i));
-            //listingAllReq((baseGameItem) target.getPrerequisites().get(i));
             if (!allReq.contains(target.getPrerequisites().get(i))) { //put target.getPrerequisites().get(i)) into a variable
                 allReq.add((baseGameItem) target.getPrerequisites().get(i));
                 System.out.println(target.getPrerequisiteName(i));
@@ -224,7 +218,6 @@ public class TechTree {
 
     public void totalWoodCost(baseGameItem target) {
         int temp = 0;
-        // allReq.forEach(targetCost -> {temp += cost(targetCost)} );
         for (baseGameItem targetCost : allReq) {
             temp += targetCost.requiredWood;
         }

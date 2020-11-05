@@ -7,7 +7,6 @@ package aokbo;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 
 /**
  *
@@ -26,8 +25,6 @@ public class Tasker { //This is a sort of adapter class.
     4-Stone
      *///holds all available resources.
     //Comparator<Resource> cm1;
-
-
     /*
     1-Wood
     2-Gold
@@ -37,7 +34,6 @@ public class Tasker { //This is a sort of adapter class.
     6-Hunter
      */
     public Tasker() {
-        //this.cm1 = Comparator.comparing(Resource::getFinalGatherRate);
         this.allResources = new ArrayList<>();
     }
 
@@ -51,7 +47,6 @@ public class Tasker { //This is a sort of adapter class.
     }
 
     public Resource calculateOptimalResource(int type) {
-        //allResources.sort(cm1);
         Resource temp = null;
         float max = 0;
         float time;
@@ -61,7 +56,8 @@ public class Tasker { //This is a sort of adapter class.
             if (next.sourceType == type && next.currentWorkerNumber < next.maxWorkerSlot) {
                 resourcePerVil = next.totalResourceLeft / (next.currentWorkerNumber + 1);
                 time = resourcePerVil / next.finalGatherRate;
-                time += 18; //deploy time
+                //time += 18; //deploy time
+                time += next.walkingTime();
                 newGR = resourcePerVil / time;
                 if (newGR > max) {
                     max = newGR;
@@ -70,8 +66,8 @@ public class Tasker { //This is a sort of adapter class.
             }
         }
         if (temp != null) {
-            //System.out.println("newGR = " + max + " Name = " + temp.name);
-            //System.out.println("Walking time = " + temp.walkingTime());
+//            System.out.println("newGR = " + max + " Name = " + temp.name);
+//            System.out.println("Walking time = " + temp.walkingTime());
         }
 
         return temp;
@@ -84,7 +80,7 @@ public class Tasker { //This is a sort of adapter class.
         temp = calculateOptimalResource(position);
         if (temp != null) {
             temp.addWorker(gatherer);
-        }else{
+        } else {
             //System.out.println("No more space for that job!");
         }
     }

@@ -13,7 +13,7 @@ import java.util.LinkedList;
  *
  * @author Oytun
  */
-public class Simulation {
+public class SimulationWithGraphdata {
 
     private float totalFood;
     private float totalWood;
@@ -26,8 +26,12 @@ public class Simulation {
     ArrayList<Building> buildings; // instead of this, I can parse building into Barracks, TCS ect in constuctor.
     ArrayList<Building> allTCs;
     int inQ = 0;
+    GraphData data;
+    int population;
+    int vilCount;
+    boolean includeGraphData;
 
-    public Simulation(gameRules rules, TechTree techTree, ArrayList<Resource> resources) {
+    public SimulationWithGraphdata(gameRules rules, TechTree techTree, ArrayList<Resource> resources, boolean includeGraphData) {
         this.totalWood = rules.getWood();
         this.totalFood = rules.getFood();
         this.totalGold = rules.getGold();
@@ -38,10 +42,13 @@ public class Simulation {
         this.tasker.addResourceList(resources);
         this.villagerList = new LinkedList<>();
         this.allTCs = new ArrayList<>();
+        this.includeGraphData = includeGraphData;
         this.inQ = 0;
         for (int i = 0; i < rules.startingVilCount; i++) {
             this.villagerList.push(new Unit("Vil", 50, 0, 0, 0, 25, 0.8f, 10));
         }
+        this.population = rules.startingVilCount;
+        this.vilCount = rules.startingVilCount;
         this.buildings = (ArrayList<Building>) rules.startingBuildings.clone();
 
         for (Building tc : buildings) {
@@ -50,11 +57,14 @@ public class Simulation {
 
             }
         }
+        if (includeGraphData) {
+            this.data = new GraphData();
+        }
 
     }
 
-    public int Run(ArrayList buildOrder, int maxEstimatedTime) {
-        int token = 1;
+    public GraphData Run(ArrayList buildOrder, int maxEstimatedTime) {
+        int token = 1; // token = 1 successful. token = 2 ? token = 3 error. token = 4 finished. token = 5 
         boolean waitForResource = false;
         int ingameTime = 0;
         int temp;
@@ -76,7 +86,7 @@ public class Simulation {
                         //System.out.println("Build order finished!");
                         if (inQ == 0) {
                             //System.out.println("Fitness " + ingameTime);
-                            return ingameTime;
+                            return data;
                         } else {
                             token = 4;
                         }
@@ -135,32 +145,45 @@ public class Simulation {
                         case 0:
                             //System.out.println("ERROR!!!!!!!!");
                             //System.out.println("Fitness                                " + ingameTime + " " + totalWood + " " + totalFood + " " + totalGold + " " + totalStone);
-                            return ingameTime;
+                            return data;
 
                     }
                 }
 
             } else if (token == 3) {
                 //System.out.println("invalid index ERROR!!!!!!!!");
-                return maxEstimatedTime;
+                //return maxEstimatedTime;
+                return data;
             } else if (token == 4 && inQ == 0) {
                 //System.out.println("Fitness                                       " + ingameTime + " " + totalWood + " " + totalFood + " " + totalGold + " " + totalStone);
-                return ingameTime;
+                return data;
             }
             //call resource.clockwork
             resourceHandler();
             //other time dependent stuff like researchs ect
             timeDependent();
             ingameTime++;
+            if (includeGraphData) {
+                data.setIngameSeconds(ingameTime);
+                data.addFood((int) totalFood);
+                data.addWood((int) totalWood);
+                data.addGold((int) totalGold);
+                data.addStone((int) totalStone);
+                data.addPop(population);
+                data.addIdleVillagerCount(villagerList.size());
+                data.addVillagerCount(vilCount);
+            }
+
             //System.out.println("W: " + this.totalWood + " " + "F: " + this.totalFood + " " + "G: " + this.totalGold + " " + "S: " + this.totalStone);
             //System.out.println("inQ =                            " + inQ);
         }
         //System.out.println("Fitness " + ingameTime);
-        return maxEstimatedTime - ingameTime;
+        //return maxEstimatedTime - ingameTime;
+        return data;
 
     }
 
-    private void assignEcoBuilding(Building building) { //Maybe put this part inside tasker?
+    private void assignEcoBuilding(Building building) {
         float bestGR = 0, temp = 0;
         Resource tempResource = null;
         if (building.name.contains("Mill")) {
@@ -220,6 +243,7 @@ public class Simulation {
                     timeDependentResearch((Research) unitOrResearch); //applies the research on resources
                 } else if (unitOrResearch instanceof Unit) {
                     timeDependentProduction((Unit) unitOrResearch);
+                    population++;
                     //if it is a villager, adds on villagerList.
                 }
             }
@@ -229,6 +253,7 @@ public class Simulation {
     private void timeDependentProduction(Unit vilOrMil) { //if its a vil, adds on vil-list.
         if (vilOrMil.getName().equalsIgnoreCase("Vil")) {
             villagerList.add(vilOrMil);
+            vilCount++;
         }
         //System.out.println(vilOrMil.getName() + " created!");
 
@@ -478,6 +503,7 @@ public class Simulation {
             }
 
         }
+
     }
 
     private int produceUnit(int target) {
@@ -556,6 +582,6 @@ public class Simulation {
                 }
             }
         }
-        return 5;
+        return 5; //bug on return 0; not sure about 5
     }
 }

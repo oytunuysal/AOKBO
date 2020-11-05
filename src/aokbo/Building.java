@@ -14,7 +14,6 @@ import java.util.LinkedList;
 public class Building extends baseGameItem {
 
     //maybe put a flag for economic buildings.
-    //public baseGameItem baseUnit;
     private boolean available;
     private int queueTimeLeft;
     private baseGameItem currentQueueItem;
@@ -27,7 +26,7 @@ public class Building extends baseGameItem {
         this.currentQueueItem = null;
         this.inQueueItems = new LinkedList<>();
     }
-    
+
     public Building getNew(){
         return new Building(super.name, super.requiredFood, super.requiredWood, super.requiredGold, super.requiredStone, super.requiredAge, super.creationTime);
     }

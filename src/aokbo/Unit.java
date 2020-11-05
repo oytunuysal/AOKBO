@@ -12,7 +12,6 @@ package aokbo;
 public class Unit extends baseGameItem{
     float walkingSpeed; //havent created a vil class yet.
     int carryCapacity; //havent created a vil class yet.
-    //public baseGameItem baseUnit;
 
     public Unit(String name, int food, int wood, int gold, int age, int time, float walkingSpeed, int carryCap) {
         super(name, food, wood, gold, 0, age, time);

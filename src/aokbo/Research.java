@@ -14,12 +14,6 @@ import java.util.Iterator;
  */
 public class Research extends baseGameItem {
 
-    //public baseGameItem baseUnit;
-    // Research preResearch;
-    // int availableFlag = 1;
-    //float gatherRateFactor;
-    //int upgradeType; //0:non-eco 1:gatherRate 2:walkingSpeed/efficiency
-    // what about wheelbarrow 
     //a list with both upgrade type and gatherRateFactor. This way a reseach can change more than one attribute.
     ArrayList<UpgradeAffect> upgradeAffects;
 
@@ -32,8 +26,6 @@ public class Research extends baseGameItem {
     public Research(String name, int food, int wood, int gold, int stone, int age, int time) {
         super(name, food, wood, gold, stone, age, time);
         this.upgradeAffects = new ArrayList<>();
-        //this.gatherRateFactor = gatherRateFactor;
-        //this.upgradeType = upgradeType;
     }
 
     public void addUpgradeAffect(int resourceType, int type, int factor) { //factor is actually float..
@@ -63,19 +55,6 @@ public class Research extends baseGameItem {
 
     }
 
-    //private void applyEcoResearch(Resource aResource) {
-    //  if (upgradeType == 1) {
-    //     aResource.changeGatherRate(gatherRateFactor);
-    //} else {
-    //   aResource.changeWalkingDistanceFactor(gatherRateFactor);
-    //}
-    //maybe print a success messeage/error m.
-    //}
-    // public void addPreResearch(Research preResearch) {
-    //    this.preResearch = preResearch;
-    //     availableFlag = 0;
-    // }
-    //or private ?
     public class UpgradeAffect {
         int resourceType;
         int upgradeType;
@@ -92,7 +71,7 @@ public class Research extends baseGameItem {
             this.upgradeType = type;
             this.gatherRateFactor = factor;
         }
-        
+
         public int getResourceType(){
             return resourceType;
         }

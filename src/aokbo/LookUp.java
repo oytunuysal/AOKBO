@@ -12,7 +12,7 @@ import java.util.HashMap;
  *
  * @author Oytun
  */
-public class LookUp {
+public class LookUp { //maybe do it as static
 
     HashMap<Integer, String> lookUpTable = new HashMap<>();
 
@@ -31,6 +31,7 @@ public class LookUp {
         lookUpTable.put(63, "Build Blacksmith");
         lookUpTable.put(44, "Research Feudal");
         lookUpTable.put(54, "Research Castle");
+        lookUpTable.put(64, "Research Imperial");
     }
 
     public ArrayList convert(ArrayList<Integer> chromosome) {
