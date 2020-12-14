@@ -33,9 +33,13 @@ class Population {
 //        for(Chromosome chromosome: chromosomes){
 //            chromosome.getFitness();
 //        }
-        
+
         for (int i = 0; i < GeneticAlgorithm.NUMB_OF_ELITE_CHROMOSOMES + GeneticAlgorithm.NUMB_OF_SEMIELITE_CHROMOSOMES; i++) {
             for (int j = i + 1; j < chromosomes.length; j++) {
+//                while (chromosomes[j].getFitness() == GeneticAlgorithm.maxEstimatedTime) {
+//                    chromosomes[j]
+//                            = new Chromosome(GeneticAlgorithm.targetsize).initializeChromosome();
+//                };
                 if (chromosomes[i].getFitness() > chromosomes[j].getFitness()) {
                     temp = chromosomes[i];
                     chromosomes[i] = chromosomes[j];

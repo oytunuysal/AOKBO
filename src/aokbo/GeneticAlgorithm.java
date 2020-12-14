@@ -4,8 +4,8 @@ class GeneticAlgorithm {
 
     static final int NUMBER_OF_GENERATIONS = 1000;
     static final int POPULATION_SIZE = 100;
-    static final int targetsize = 70; //total length of chromosoms just to make sure it doesnt crash
-    static final int numberOfGenes = 40;
+    static final int targetsize = 120; //total length of chromosoms just to make sure it doesnt crash
+    static final int numberOfGenes = 90;
     static int currentGeneration = 0;
     static double MUTATION_RATE = 0.05;
     //static double MUTATION_RATE = 0;
@@ -13,13 +13,13 @@ class GeneticAlgorithm {
     //private static double MUTATION_RATE = 0.03;
     static final double THIRD_OF_MR = MUTATION_RATE / 3;
     static final int NUMB_OF_ELITE_CHROMOSOMES = 2; //impact is smaller than tournament size.
-    static final int NUMB_OF_SEMIELITE_CHROMOSOMES = 30;
-    private static final int TOURNAMENT_SELECTION_SIZE = 4; //it has huge impact on stucking at local max.
+    static final int NUMB_OF_SEMIELITE_CHROMOSOMES = 15;
+    private static final int TOURNAMENT_SELECTION_SIZE = 2; //it has huge impact on stucking at local max.
     static final int maxEstimatedTime = 3000;
     static gameRules gameRule;
     static TechTree techTree;
- 
-   Population evolve(Population population) {
+
+    Population evolve(Population population) {
         return mutatePopulation(crossoverPopulation(population));
     }
 
@@ -54,11 +54,11 @@ class GeneticAlgorithm {
         //there will be 3 types of mutation. 1- changes the deletes, 2- adds a gene, 3- changes the gene.
         //generate random number between 0 and chromosome length.
         for (int x = 0; x < chromosome.getGenes().size(); x++) {
-            if (!chromosome.targetIndexes.contains(x)) {
+            if (!chromosome.targetIndexes.contains(x)) { // && !chromosome.optionalIndexes.contains(x)
                 if (Math.random() < MUTATION_RATE) { //need to change how its going to be mutate
                     //System.out.println("MUTATION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                     double i = Math.random();
-                    
+
                     //int index = Chromosome.repeatableCommands.length - 1;
                     int index = (int) (Math.random() * 100) % Chromosome.repeatableCommands.length;
                     int repeatableCommand = Chromosome.repeatableCommands[index];
@@ -92,6 +92,12 @@ class GeneticAlgorithm {
                             chromosome.targetIndexes.set(a, chromosome.targetIndexes.get(a) + 1);
                         }
                     }
+
+//                    for (int a = 0; a < chromosome.optionalIndexes.size(); a++) {
+//                        if (chromosome.optionalIndexes.get(a) >= x) {
+//                            chromosome.optionalIndexes.set(a, chromosome.optionalIndexes.get(a) + 1);
+//                        }
+//                    }
                 }
             }
 
@@ -136,51 +142,87 @@ class GeneticAlgorithm {
         chromosome.getFitness();
     }
      */
+//    private Chromosome crossoverChromosome(Chromosome chromosome1, Chromosome chromosome2) {
+//        Chromosome crossoverChromosome = new Chromosome(targetsize);
+//        int firstHalfIndex = 0;
+//        int i = 0;
+//        int index = ((int) (Math.random() * 100)) % chromosome1.targetIndexes.size(); //selects a random command inside the randomNumbers
+//        if (Math.random() < 0.5) {
+//            firstHalfIndex = chromosome1.targetIndexes.get(index); //selects the locaiton of that command inside the chromosome1
+//            for (int x = 0; x < firstHalfIndex; x++) {//prints until that location comes.
+//                crossoverChromosome.getGenes().add(chromosome1.getGenes().get(x));
+//                i++;
+//            }
+//            for (int x = chromosome2.targetIndexes.get(index); x < chromosome2.genes.size(); x++) {//prints other half
+//                crossoverChromosome.getGenes().add(chromosome2.getGenes().get(x));
+//            }
+//            for (int x = 0; x < index; x++) { //copying randomNumbers
+//                crossoverChromosome.targetIndexes.add(chromosome1.targetIndexes.get(x));
+//            }
+//            for (int x = index; x < chromosome2.targetIndexes.size(); x++) {
+//                crossoverChromosome.targetIndexes.add(i + chromosome2.targetIndexes.get(x) - chromosome2.targetIndexes.get(index));
+//                //crossoverChromosome.randomNumbers.add(Math.abs(i + 1 - chromosome2.randomNumbers.get(x)));
+//            }
+//
+//        } else {
+//            firstHalfIndex = chromosome2.targetIndexes.get(index); //selects the locaiton of that command inside the chromosome2
+//            for (int x = 0; x < firstHalfIndex; x++) {//prints until that location comes.
+//                crossoverChromosome.getGenes().add(chromosome2.getGenes().get(x));
+//                i++;
+//            }
+//            for (int x = chromosome1.targetIndexes.get(index); x < chromosome1.genes.size(); x++) {//prints other half
+//
+//                crossoverChromosome.getGenes().add(chromosome1.getGenes().get(x));
+//
+//            }
+//            for (int x = 0; x < index; x++) { //copying randomNumbers
+//                crossoverChromosome.targetIndexes.add(chromosome2.targetIndexes.get(x));
+//            }
+//            for (int x = index; x < chromosome2.targetIndexes.size(); x++) {
+//                //crossoverChromosome.randomNumbers.add(Math.abs(i + 1 - chromosome1.randomNumbers.get(x)));
+//                crossoverChromosome.targetIndexes.add(i + chromosome1.targetIndexes.get(x) - chromosome1.targetIndexes.get(index));
+//            }
+//        }
+//        //crossoverChromosome.setGenes();
+//        crossoverChromosome.setChromosomeChanged();
+//        crossoverChromosome.getFitness();
+//        return crossoverChromosome;
+//    }
     private Chromosome crossoverChromosome(Chromosome chromosome1, Chromosome chromosome2) {
         Chromosome crossoverChromosome = new Chromosome(targetsize);
-        int firstHalfIndex = 0;
-        int i = 0;
-        int index = ((int) (Math.random() * 100)) % chromosome1.targetIndexes.size(); //selects a random command inside the randomNumbers
+
         if (Math.random() < 0.5) {
-            firstHalfIndex = chromosome1.targetIndexes.get(index); //selects the locaiton of that command inside the chromosome1
-            for (int x = 0; x < firstHalfIndex; x++) {//prints until that location comes.
-                crossoverChromosome.getGenes().add(chromosome1.getGenes().get(x));
-                i++;
-            }
-            for (int x = chromosome2.targetIndexes.get(index); x < chromosome2.genes.size(); x++) {//prints other half
-                crossoverChromosome.getGenes().add(chromosome2.getGenes().get(x));
-            }
-            for (int x = 0; x < index; x++) { //copying randomNumbers
-                crossoverChromosome.targetIndexes.add(chromosome1.targetIndexes.get(x));
-            }
-            for (int x = index; x < chromosome2.targetIndexes.size(); x++) {
-                crossoverChromosome.targetIndexes.add(i + chromosome2.targetIndexes.get(x) - chromosome2.targetIndexes.get(index));
-                //crossoverChromosome.randomNumbers.add(Math.abs(i + 1 - chromosome2.randomNumbers.get(x)));
-            }
+            crossoverParts(crossoverChromosome, chromosome1, chromosome2);
 
         } else {
-            firstHalfIndex = chromosome2.targetIndexes.get(index); //selects the locaiton of that command inside the chromosome2
-            for (int x = 0; x < firstHalfIndex; x++) {//prints until that location comes.
-                crossoverChromosome.getGenes().add(chromosome2.getGenes().get(x));
-                i++;
-            }
-            for (int x = chromosome1.targetIndexes.get(index); x < chromosome1.genes.size(); x++) {//prints other half
-
-                crossoverChromosome.getGenes().add(chromosome1.getGenes().get(x));
-
-            }
-            for (int x = 0; x < index; x++) { //copying randomNumbers
-                crossoverChromosome.targetIndexes.add(chromosome2.targetIndexes.get(x));
-            }
-            for (int x = index; x < chromosome2.targetIndexes.size(); x++) {
-                //crossoverChromosome.randomNumbers.add(Math.abs(i + 1 - chromosome1.randomNumbers.get(x)));
-                crossoverChromosome.targetIndexes.add(i + chromosome1.targetIndexes.get(x) - chromosome1.targetIndexes.get(index));
-            }
+            crossoverParts(crossoverChromosome, chromosome2, chromosome1);
         }
         //crossoverChromosome.setGenes();
         crossoverChromosome.setChromosomeChanged();
         crossoverChromosome.getFitness();
         return crossoverChromosome;
+    }
+
+    private void crossoverParts(Chromosome crossoverChromosome, Chromosome chromosome1, Chromosome chromosome2) {
+        int firstHalfIndex;
+        int i = 0;
+        int index = ((int) (Math.random() * 100)) % chromosome1.targetIndexes.size(); //selects a random command inside the randomNumbers
+        firstHalfIndex = chromosome1.targetIndexes.get(index); //selects the locaiton of that command inside the chromosome1
+
+        for (int x = 0; x < firstHalfIndex; x++) {//prints until that location comes.
+            crossoverChromosome.getGenes().add(chromosome1.getGenes().get(x));
+            i++;
+        }
+        for (int x = chromosome2.targetIndexes.get(index); x < chromosome2.genes.size(); x++) {//prints other half
+            crossoverChromosome.getGenes().add(chromosome2.getGenes().get(x));
+        }
+        for (int x = 0; x < index; x++) { //copying randomNumbers
+            crossoverChromosome.targetIndexes.add(chromosome1.targetIndexes.get(x));
+        }
+        for (int x = index; x < chromosome2.targetIndexes.size(); x++) {
+            crossoverChromosome.targetIndexes.add(i + chromosome2.targetIndexes.get(x) - chromosome2.targetIndexes.get(index));
+            //crossoverChromosome.randomNumbers.add(Math.abs(i + 1 - chromosome2.randomNumbers.get(x)));
+        }
     }
 
     private Population selectTournamentPopulation(Population population) {

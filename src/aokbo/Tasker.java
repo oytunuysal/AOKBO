@@ -46,38 +46,61 @@ public class Tasker { //This is a sort of adapter class.
         allResources.addAll(resource);
     }
 
-    public Resource calculateOptimalResource(int type) {
+    public Resource calculateOptimalResource(int type, boolean print) {
         Resource temp = null;
         float max = 0;
-        float time;
-        float resourcePerVil;
         float newGR; //new gather rate
         for (Resource next : allResources) {
             if (next.sourceType == type && next.currentWorkerNumber < next.maxWorkerSlot) {
-                resourcePerVil = next.totalResourceLeft / (next.currentWorkerNumber + 1);
-                time = resourcePerVil / next.finalGatherRate;
-                //time += 18; //deploy time
-                time += next.walkingTime();
-                newGR = resourcePerVil / time;
+                newGR = calculateGR(next);
                 if (newGR > max) {
                     max = newGR;
                     temp = next;
                 }
             }
         }
-        if (temp != null) {
-//            System.out.println("newGR = " + max + " Name = " + temp.name);
+        //if maxGR<farmingGR make farm and work on farm. 
+        if (temp != null && print == true) {
+            System.out.println("newGR = " + max + " Name = " + temp.name);
 //            System.out.println("Walking time = " + temp.walkingTime());
         }
 
         return temp;
     }
 
-    public void addVilTask(Unit gatherer, int position) {
+    public float calculateGR(Resource next) {
+        float time;
+        float resourcePerVil;
+
+        resourcePerVil = next.totalResourceLeft / (next.currentWorkerNumber + 1);
+        time = resourcePerVil / next.finalGatherRate;
+        //time += 18; //deploy time
+        time += next.walkingTime();
+
+        return (resourcePerVil / time);
+    }
+
+    public boolean isFarmOk() { //takes the actual farm as argument
+        Resource temp = calculateOptimalResource(2, false);
+        float newGR;
+        float farmGR = 0.30f;
+        if (temp != null) {
+            newGR = calculateGR(temp);
+            if (newGR < farmGR) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    public void addVilTask(Unit gatherer, int position, boolean showPrints) {
         //int indicates the resource
         Resource temp;
 
-        temp = calculateOptimalResource(position);
+        temp = calculateOptimalResource(position, showPrints);
         if (temp != null) {
             temp.addWorker(gatherer);
         } else {
@@ -94,9 +117,9 @@ public class Tasker { //This is a sort of adapter class.
         return null;
     }
 
-    public void addCollectionofVils(Collection<Unit> vils, int position) {
+    public void addCollectionofVils(Collection<Unit> vils, int position, boolean showPrints) {
         for (Unit next : vils) {
-            addVilTask(next, position);
+            addVilTask(next, position, showPrints);
         }
     }
 }

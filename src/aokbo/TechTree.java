@@ -20,6 +20,7 @@ public class TechTree {
 
     Research DarkAgeResearch;
     Building Mill;
+    Building Farm;
     Building LumberCamp;
     Building MiningCamp;
     Building TownCenter;
@@ -54,6 +55,10 @@ public class TechTree {
 
         Mill = new Building("Mill", 0, 100, 0, 0, 0, 35);
         allGameItems.add(Mill);
+        
+        Farm = new Building("Farm", 0, 60, 0, 0, 0, 15);
+        allGameItems.add(Farm);
+        Farm.addPreRequisites(Mill);
 
         LumberCamp = new Building("Lumber Camp", 0, 100, 0, 0, 0, 35);
         allGameItems.add(LumberCamp);
@@ -79,6 +84,7 @@ public class TechTree {
         FeudalAgeResearch.addPreRequisites(Barracks);
         FeudalAgeResearch.addPreRequisites(Mill);
         FeudalAgeResearch.addPreRequisites(LumberCamp);
+        FeudalAgeResearch.addUpgradeAffect(4, 0, 1);
 
         ManAtArms = new Research("Man at Arms", 100, 0, 45, 0, 0, 40);
         ManAtArms.addPreRequisites(FeudalAgeResearch);
@@ -127,6 +133,7 @@ public class TechTree {
         CastleAgeResearch.addPreRequisites(ArcheryRange);
         CastleAgeResearch.addPreRequisites(Stable);
         allGameItems.add(CastleAgeResearch);
+        CastleAgeResearch.addUpgradeAffect(4, 0, 2);
 
         LongswordsMan = new Research("Long Swordsman", 200, 0, 65, 0, 0, 45);
         LongswordsMan.addPreRequisites(CastleAgeResearch);
@@ -157,6 +164,7 @@ public class TechTree {
         ImperialAgeResearch = new Research("ImperialAgeResearch", 1000, 0, 800, 0, 0, 190);
         ImperialAgeResearch.addPreRequisites(TownCenter);
         allGameItems.add(ImperialAgeResearch);
+        ImperialAgeResearch.addUpgradeAffect(4, 0, 3);
 
         //...
         TownCenter.addPreRequisites(CastleAgeResearch);

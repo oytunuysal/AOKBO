@@ -7,11 +7,13 @@ public class Chromosome {
 
     private boolean isFitnessChanged = true;
     private int fitness = 0;
-    public static int[] repeatableCommands = new int[]{11, 21, 31};
+    public static int[] repeatableCommands = new int[]{11, 21, 31, 41};
     public static ArrayList<Integer> targetPrerequisites;
     public ArrayList<Integer> genes = new ArrayList<>();
     int length = 0;
     public ArrayList<Integer> targetIndexes = new ArrayList<>();
+//    public static int[] optionalCommands = new int[]{16};
+//    public ArrayList<Integer> optionalIndexes = new ArrayList<>();
 
     Chromosome(int length) {
         //genes = new int[length];
@@ -51,7 +53,7 @@ public class Chromosome {
         int chromosomeFitness = 0;
         //Printing all genes inside the chromosome
         //System.out.println(genes.toString());
-        Simulation calc = new Simulation(GeneticAlgorithm.gameRule, GeneticAlgorithm.techTree, AOKBO.createNewResources());
+        SimulationMaintained calc = new SimulationMaintained(GeneticAlgorithm.gameRule, GeneticAlgorithm.techTree, AOKBO.createNewResources());
         chromosomeFitness = calc.Run(genes, GeneticAlgorithm.maxEstimatedTime);
         if (chromosomeFitness == 0) {
             chromosomeFitness = GeneticAlgorithm.maxEstimatedTime;
@@ -67,10 +69,19 @@ public class Chromosome {
         for (int i = 0; i < GeneticAlgorithm.numberOfGenes; i++) { //creates random repeatable commands
             genes.add(repeatableCommands[((int) (Math.random() * 100)) % repeatableCommands.length]);
         }
+
         int randomNumber;
+//        for (int i = 0; i < optionalCommands.length; i++) {
+//            randomNumber = (int) (Math.random() * 100) % genes.size();
+//            genes.add(randomNumber, optionalCommands[i]);
+//            optionalIndexes.add(randomNumber);
+//        }
+//        // Collections.sort(optionalIndexes);
+
         for (int i = 0; i < prerequisiteSize; i++) { //should not create the same index value
             do {
                 randomNumber = (int) (Math.random() * 100) % genes.size();
+                //} while (targetIndexes.contains(randomNumber) || optionalIndexes.contains(randomNumber));
             } while (targetIndexes.contains(randomNumber));
             targetIndexes.add(randomNumber);
         }

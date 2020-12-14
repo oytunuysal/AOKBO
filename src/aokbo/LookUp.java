@@ -32,6 +32,7 @@ public class LookUp { //maybe do it as static
         lookUpTable.put(44, "Research Feudal");
         lookUpTable.put(54, "Research Castle");
         lookUpTable.put(64, "Research Imperial");
+        lookUpTable.put(16, "Enable Farms");
     }
 
     public ArrayList convert(ArrayList<Integer> chromosome) {

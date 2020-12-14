@@ -137,15 +137,27 @@ public class Resource {
 
     public float differenceAfterBuilding() {
         float resourcePerVil, time, newGRwithoutECO, newGRwithECO;
-        resourcePerVil = totalResourceLeft / (currentWorkerNumber);
-        time = resourcePerVil / finalGatherRate;
-        time += distanceGatherPoint / walkingDistanceFactor; //deploy time
-        newGRwithoutECO = resourcePerVil / time;
-
-        resourcePerVil = totalResourceLeft / (currentWorkerNumber);
-        time = resourcePerVil / finalGatherRate;
-        time += distanceGatherPoint / walkingDistanceFactor; //deploy time
-        newGRwithECO = resourcePerVil / time;
+        int currentWorkerNumber;
+        if (this.currentWorkerNumber == 0) {
+            currentWorkerNumber = 1;
+        } else {
+            currentWorkerNumber = this.currentWorkerNumber;
+        }
+//        resourcePerVil = totalResourceLeft / (currentWorkerNumber);
+//        time = resourcePerVil / finalGatherRate;
+//        time += distanceGatherPoint / walkingDistanceFactor; //deploy time
+//        newGRwithoutECO = resourcePerVil / time;
+//
+//        resourcePerVil = totalResourceLeft / (currentWorkerNumber);
+//        time = resourcePerVil / finalGatherRate;
+//         time += 1 / walkingDistanceFactor; //deploy time
+//        newGRwithECO = resourcePerVil / time;
+        newGRwithoutECO = carryCapacity / (walkingTime() + (carryCapacity / gatherRate));
+        newGRwithECO = carryCapacity / (1 + (carryCapacity / gatherRate));
+//        System.out.println(newGRwithECO);
+//        System.out.println(newGRwithoutECO);
+//        System.out.println((newGRwithECO - newGRwithoutECO));
+//        System.out.println("");
         return newGRwithECO - newGRwithoutECO;
     }
 

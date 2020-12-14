@@ -26,6 +26,7 @@ public class Simulation {
     ArrayList<Building> buildings; // instead of this, I can parse building into Barracks, TCS ect in constuctor.
     ArrayList<Building> allTCs;
     int inQ = 0;
+    boolean enableFarms;
 
     public Simulation(gameRules rules, TechTree techTree, ArrayList<Resource> resources) {
         this.totalWood = rules.getWood();
@@ -39,6 +40,7 @@ public class Simulation {
         this.villagerList = new LinkedList<>();
         this.allTCs = new ArrayList<>();
         this.inQ = 0;
+        this.enableFarms = true;
         for (int i = 0; i < rules.startingVilCount; i++) {
             this.villagerList.push(new Unit("Vil", 50, 0, 0, 0, 25, 0.8f, 10));
         }
@@ -132,6 +134,11 @@ public class Simulation {
                                 waitForResource = false;
                             }
                             break;
+                        case 6:
+                            //special commands
+                            specialCommand(nextInput2);
+                            break;
+
                         case 0:
                             //System.out.println("ERROR!!!!!!!!");
                             //System.out.println("Fitness                                " + ingameTime + " " + totalWood + " " + totalFood + " " + totalGold + " " + totalStone);
@@ -247,99 +254,122 @@ public class Simulation {
         }
     }
 
+    private int tryResearch(Research research, String building) {
+        if (hasEnoughResource(research)) {
+            boolean hasFound = false;
+            executeCost(research);
+            //maybe apply method here
+            hasFound = putIntoQueue(building, research);
+            if (hasFound) {
+                return 1;
+            } else {
+                //System.out.println("No space in queue");
+                return 1;
+            }
+        } else {
+            return 2;
+        }
+    }
+
     private int researchCommand(int index) {
         switch (index) {
             case 1:
+                return tryResearch(techTree.ManAtArms, "Barracks");
 
-                if (hasEnoughResource(techTree.ManAtArms)) {
-                    boolean hasFound = false;
-                    executeCost(techTree.ManAtArms);
-                    //maybe apply method here
-                    hasFound = putIntoQueue("Barracks", techTree.ManAtArms);
-                    if (hasFound) {
-                        return 1;
-                    } else {
-                        //System.out.println("No space in queue");
-                        return 1;
-                    }
-                } else {
-                    return 2;
-                }
+//                if (hasEnoughResource(techTree.ManAtArms)) {
+//                    boolean hasFound = false;
+//                    executeCost(techTree.ManAtArms);
+//                    //maybe apply method here
+//                    hasFound = putIntoQueue("Barracks", techTree.ManAtArms);
+//                    if (hasFound) {
+//                        return 1;
+//                    } else {
+//                        //System.out.println("No space in queue");
+//                        return 1;
+//                    }
+//                } else {
+//                    return 2;
+//                }
             case 2:
-                if (hasEnoughResource(techTree.DoubleBitAxeResearch)) {
-                    boolean hasFound = false;
-                    executeCost(techTree.DoubleBitAxeResearch);
-                    //maybe apply method here
-                    hasFound = putIntoQueue("Lumber Camp", techTree.DoubleBitAxeResearch);
-                    if (hasFound) {
-                        return 1;
-                    } else {
-                        //System.out.println("No space in queue");
-                        return 1;
-                    }
-                } else {
-                    return 2;
-                }
+                return tryResearch(techTree.DoubleBitAxeResearch, "Lumber Camp");
+//                if (hasEnoughResource(techTree.DoubleBitAxeResearch)) {
+//                    boolean hasFound = false;
+//                    executeCost(techTree.DoubleBitAxeResearch);
+//                    //maybe apply method here
+//                    hasFound = putIntoQueue("Lumber Camp", techTree.DoubleBitAxeResearch);
+//                    if (hasFound) {
+//                        return 1;
+//                    } else {
+//                        //System.out.println("No space in queue");
+//                        return 1;
+//                    }
+//                } else {
+//                    return 2;
+//                }
             case 3:
-                if (hasEnoughResource(techTree.WheelbarrowResearch)) {
-                    boolean hasFound = false;
-                    executeCost(techTree.WheelbarrowResearch);
-                    //maybe apply method here
-                    hasFound = putIntoQueue("TownCenter", techTree.WheelbarrowResearch);
-                    if (hasFound) {
-                        return 1;
-                    } else {
-                        //System.out.println("No space in queue");
-                        return 1;
-                    }
-                } else {
-                    return 2;
-                }
+                return tryResearch(techTree.WheelbarrowResearch, "TownCenter");
+//                if (hasEnoughResource(techTree.WheelbarrowResearch)) {
+//                    boolean hasFound = false;
+//                    executeCost(techTree.WheelbarrowResearch);
+//                    //maybe apply method here
+//                    hasFound = putIntoQueue("TownCenter", techTree.WheelbarrowResearch);
+//                    if (hasFound) {
+//                        return 1;
+//                    } else {
+//                        //System.out.println("No space in queue");
+//                        return 1;
+//                    }
+//                } else {
+//                    return 2;
+//                }
             case 4:
-                if (hasEnoughResource(techTree.FeudalAgeResearch)) {
-                    boolean hasFound = false;
-                    executeCost(techTree.FeudalAgeResearch);
-                    //maybe apply method here
-                    hasFound = putIntoQueue("TownCenter", techTree.FeudalAgeResearch);
-                    if (hasFound) {
-                        return 1;
-                    } else {
-                        //System.out.println("No space in queue");
-                        return 1;
-                    }
-                } else {
-                    return 2;
-                }
+                return tryResearch(techTree.FeudalAgeResearch, "TownCenter");
+//                if (hasEnoughResource(techTree.FeudalAgeResearch)) {
+//                    boolean hasFound = false;
+//                    executeCost(techTree.FeudalAgeResearch);
+//                    //maybe apply method here
+//                    hasFound = putIntoQueue("TownCenter", techTree.FeudalAgeResearch);
+//                    if (hasFound) {
+//                        return 1;
+//                    } else {
+//                        //System.out.println("No space in queue");
+//                        return 1;
+//                    }
+//                } else {
+//                    return 2;
+//                }
             case 5:
-                if (hasEnoughResource(techTree.CastleAgeResearch)) {
-                    boolean hasFound = false;
-                    executeCost(techTree.CastleAgeResearch);
-                    //maybe apply method here
-                    hasFound = putIntoQueue("TownCenter", techTree.CastleAgeResearch);
-                    if (hasFound) {
-                        return 1;
-                    } else {
-                        //System.out.println("No space in queue");
-                        return 1;
-                    }
-                } else {
-                    return 2;
-                }
+                return tryResearch(techTree.CastleAgeResearch, "TownCenter");
+//                if (hasEnoughResource(techTree.CastleAgeResearch)) {
+//                    boolean hasFound = false;
+//                    executeCost(techTree.CastleAgeResearch);
+//                    //maybe apply method here
+//                    hasFound = putIntoQueue("TownCenter", techTree.CastleAgeResearch);
+//                    if (hasFound) {
+//                        return 1;
+//                    } else {
+//                        //System.out.println("No space in queue");
+//                        return 1;
+//                    }
+//                } else {
+//                    return 2;
+//                }
             case 6:
-                if (hasEnoughResource(techTree.ImperialAgeResearch)) {
-                    boolean hasFound = false;
-                    executeCost(techTree.ImperialAgeResearch);
-                    //maybe apply method here
-                    hasFound = putIntoQueue("TownCenter", techTree.ImperialAgeResearch);
-                    if (hasFound) {
-                        return 1;
-                    } else {
-                        //System.out.println("No space in queue");
-                        return 1;
-                    }
-                } else {
-                    return 2;
-                }
+                return tryResearch(techTree.ImperialAgeResearch, "TownCenter");
+//                if (hasEnoughResource(techTree.ImperialAgeResearch)) {
+//                    boolean hasFound = false;
+//                    executeCost(techTree.ImperialAgeResearch);
+//                    //maybe apply method here
+//                    hasFound = putIntoQueue("TownCenter", techTree.ImperialAgeResearch);
+//                    if (hasFound) {
+//                        return 1;
+//                    } else {
+//                        //System.out.println("No space in queue");
+//                        return 1;
+//                    }
+//                } else {
+//                    return 2;
+//                }
         }
         return 3;
     }
@@ -531,11 +561,36 @@ public class Simulation {
 
     }
 
+    public void specialCommand(int command) {
+        switch (command) {
+            case 1:
+                this.enableFarms = true;
+                break;
+        }
+    }
+
     public int villagerTaskCommand(int task) {
         Building temp = null;
         if (!villagerList.isEmpty()) {
-            tasker.addVilTask(villagerList.pop(), task);
-            return 1;
+            if (!(enableFarms && task == 2)) {
+                tasker.addVilTask(villagerList.pop(), task, false);
+                return 1;
+            } else {
+                //first decide on farm or others
+                if (tasker.isFarmOk()) {
+                    Resource tempFarm = new Resource(2, "Farm", 0.310f, 1, 175, 10, 1);
+                    this.resourceList.add(tempFarm);
+                    tasker.addResource(tempFarm);
+                    //System.out.println("Farm added!");
+                    tasker.addVilTask(villagerList.pop(), task, false);
+                    return 1;
+                } else {
+                    tasker.addVilTask(villagerList.pop(), task, false);
+                    return 1;
+                }
+
+            }
+
         } else {
             for (Building aTC : allTCs) {
                 if (!aTC.isAvailable()) {

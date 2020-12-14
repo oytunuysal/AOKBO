@@ -30,6 +30,7 @@ public class SimulationWithGraphdata {
     int population;
     int vilCount;
     boolean includeGraphData;
+    boolean enableFarms;
 
     public SimulationWithGraphdata(gameRules rules, TechTree techTree, ArrayList<Resource> resources, boolean includeGraphData) {
         this.totalWood = rules.getWood();
@@ -44,6 +45,7 @@ public class SimulationWithGraphdata {
         this.allTCs = new ArrayList<>();
         this.includeGraphData = includeGraphData;
         this.inQ = 0;
+        this.enableFarms = true;
         for (int i = 0; i < rules.startingVilCount; i++) {
             this.villagerList.push(new Unit("Vil", 50, 0, 0, 0, 25, 0.8f, 10));
         }
@@ -141,6 +143,10 @@ public class SimulationWithGraphdata {
                             } else if (token == 1) {
                                 waitForResource = false;
                             }
+                            break;
+                        case 6:
+                            //special commands
+                            specialCommand(nextInput2);
                             break;
                         case 0:
                             //System.out.println("ERROR!!!!!!!!");
@@ -557,11 +563,36 @@ public class SimulationWithGraphdata {
 
     }
 
+    public void specialCommand(int command) {
+        switch (command) {
+            case 1:
+                this.enableFarms = true;
+                break;
+        }
+    }
+
     public int villagerTaskCommand(int task) {
         Building temp = null;
         if (!villagerList.isEmpty()) {
-            tasker.addVilTask(villagerList.pop(), task);
-            return 1;
+            if (!(enableFarms && task == 2)) {
+                tasker.addVilTask(villagerList.pop(), task, true);
+                return 1;
+            } else {
+                //first decide on farm or others
+                if (tasker.isFarmOk()) {
+                    Resource tempFarm = new Resource(2, "Farm", 0.310f, 1, 175, 10, 1);
+                    this.resourceList.add(tempFarm);
+                    tasker.addResource(tempFarm);
+                    //System.out.println("Farm added!");
+                    tasker.addVilTask(villagerList.pop(), task, true);
+                    return 1;
+                } else {
+                    tasker.addVilTask(villagerList.pop(), task, true);
+                    return 1;
+                }
+
+            }
+
         } else {
             for (Building aTC : allTCs) {
                 if (!aTC.isAvailable()) {
