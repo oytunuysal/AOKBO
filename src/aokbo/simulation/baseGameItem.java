@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aokbo;
+package aokbo.simulation;
 
 import java.util.ArrayList;
 
@@ -13,12 +13,13 @@ import java.util.ArrayList;
  */
 public class baseGameItem {
 
-    String name;
-    int requiredFood, requiredWood, requiredGold, requiredStone, requiredAge;
-    int creationTime;
-    ArrayList<baseGameItem> preRequisites = new ArrayList<>();
+    private String name;
+    private int requiredFood, requiredWood, requiredGold, requiredStone, requiredAge;
+    private int creationTime;
+    private ArrayList<baseGameItem> preRequisites = new ArrayList<>();
 
-    public baseGameItem(String name, int requiredFood, int requiredWood, int requiredGold, int requiredStone, int requiredAge, int creationTime) {
+    public baseGameItem(String name, int requiredFood, int requiredWood, int requiredGold, int requiredStone,
+            int requiredAge, int creationTime) {
         this.name = name;
         this.creationTime = creationTime;
         this.requiredAge = requiredAge;
@@ -32,7 +33,7 @@ public class baseGameItem {
         this.preRequisites.add(preRequisite);
     }
 
-    public ArrayList getPrerequisites() {
+    public ArrayList<baseGameItem> getPrerequisites() {
         return preRequisites;
     }
 
@@ -41,7 +42,6 @@ public class baseGameItem {
     }
 
     public void listPrerequisiteNames() {
-        //int i;
         for (int i = 0; i < preRequisites.size(); i++) {
             System.out.println('-' + preRequisites.get(i).name);
         }

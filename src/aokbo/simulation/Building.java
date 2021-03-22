@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aokbo;
+package aokbo.simulation;
 
 import java.util.LinkedList;
 
@@ -13,11 +13,11 @@ import java.util.LinkedList;
  */
 public class Building extends baseGameItem {
 
-    //maybe put a flag for economic buildings.
+    // maybe put a flag for economic buildings.
     private boolean available;
     private int queueTimeLeft;
     private baseGameItem currentQueueItem;
-    LinkedList<baseGameItem> inQueueItems;
+    private LinkedList<baseGameItem> inQueueItems;
 
     public Building(String name, int food, int wood, int gold, int stone, int age, int time) {
         super(name, food, wood, gold, stone, age, time);
@@ -27,8 +27,9 @@ public class Building extends baseGameItem {
         this.inQueueItems = new LinkedList<>();
     }
 
-    public Building getNew(){
-        return new Building(super.name, super.requiredFood, super.requiredWood, super.requiredGold, super.requiredStone, super.requiredAge, super.creationTime);
+    public Building getNew() {
+        return new Building(super.getName(), super.getRequiredFood(), super.getRequiredWood(), super.getRequiredGold(),
+                super.getRequiredStone(), super.getRequiredAge(), super.getCreationTime());
     }
 
     public boolean isAvailable() {
@@ -60,7 +61,7 @@ public class Building extends baseGameItem {
     }
 
     public String getCurrentQIName() {
-        return this.currentQueueItem.name;
+        return this.currentQueueItem.getName();
     }
 
     public int getQueueTimeLeft() {
@@ -74,7 +75,7 @@ public class Building extends baseGameItem {
     public void addQueue(baseGameItem queueItem) {
         if (currentQueueItem == null) {
             this.currentQueueItem = queueItem;
-            setQueueTime(queueItem.creationTime);
+            setQueueTime(queueItem.getCreationTime());
             setUnavailable();
         } else {
             inQueueItems.add(queueItem);
@@ -89,7 +90,7 @@ public class Building extends baseGameItem {
                 if (inQueueItems.isEmpty()) {
                     setAvailable();
                 } else {
-                    setQueueTime(currentQueueItem.creationTime);
+                    setQueueTime(currentQueueItem.getCreationTime());
                 }
                 return true;
             }

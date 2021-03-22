@@ -9,28 +9,42 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import aokbo.genetic.Chromosome;
+import aokbo.genetic.GeneticAlgorithm;
+import aokbo.genetic.Options;
+import aokbo.genetic.Population;
+import aokbo.simulation.Building;
+import aokbo.simulation.GameRules;
+import aokbo.simulation.GraphData;
+import aokbo.simulation.LineChart;
+import aokbo.simulation.LookUp;
+import aokbo.simulation.Resource;
+import aokbo.simulation.SimulationMaintained;
+import aokbo.simulation.Tasker;
+import aokbo.simulation.TechTree;
+import aokbo.simulation.Unit;
+
 /**
  *
  * @author Oytun
  */
-public class AOKBO {
+public class AOKBO { // Mostly for testing
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        tryCaseSimulateWithResources();
-        //Genetic algorithm test case
-//        tryCaseRunWithGA();
-        //These are test cases for some functionalities.
-        //tryCaseRun();
-        //tryCaseFood();
-        //tryCaseDeer();
-        //tryCaseWheelbarrow();
-        //tryCaseTechtree();
-        //tryCaseResources();
-        //tryCaseResourcesAddVilsByTime();
-        System.out.println(" MUTATION_RATE / 3 = " + GeneticAlgorithm.MUTATION_RATE / 3);
+        //tryCaseSimulateWithResources();
+        // Genetic algorithm test case
+         tryCaseRunWithGA();
+        // These are test cases for some functionalities.
+        // tryCaseRun();
+        // tryCaseFood();
+        // tryCaseDeer();
+        // tryCaseWheelbarrow();
+        // tryCaseTechtree();
+        // tryCaseResources();
+        // tryCaseResourcesAddVilsByTime();
     }
 
     public static ArrayList<Resource> createNewResources() {
@@ -47,32 +61,52 @@ public class AOKBO {
 
     public static void tryCaseSimulateWithResources() {
         int maxEstimatedTime = 4000;
-        Integer[] thirteen = {21, 21, 21, 11, 21, 21, 11, 21, 21, 21, 21, 21, 31, 23, 22, 22, 22, 31, 22, 22, 22, 22, 31, 21, 31, 31, 21, 21, 21, 22, 22, 21, 22, 22, 22, 22};
-        Integer[] thirteen2 = {21, 11, 21, 31, 21, 21, 11, 21, 21, 21, 21, 21, 23, 22, 31, 22, 22, 22, 22, 22, 31, 22, 22, 22, 22, 22, 22, 31, 31, 22};
-        Integer[] thirteen3 = {21, 11, 21, 21, 21, 31, 11, 21, 21, 21, 21, 21, 23, 22, 21, 22, 22, 31, 22, 22, 22, 22, 22, 22, 31, 21, 21, 21, 31, 21, 21, 31, 22, 21, 22, 22, 22};
-        Integer[] fastFedual = {21, 21, 21, 11, 21, 21, 21, 21, 21, 21, 33, 21, 21, 21, 21, 11, 11, 11, 43, 44};
-        Integer[] fastFeudal2 = {11, 21, 21, 21, 21, 21, 21, 33, 11, 43, 44};
-        Integer[] fastFeudal3 = {21, 21, 21, 21, 11, 33, 11, 21, 21, 43, 44};
-        Integer[] fastCastle = {21, 11, 21, 21, 11, 21, 21, 21, 33, 21, 21, 21, 21, 21, 43, 11, 53, 21, 21, 11, 11, 21, 11, 21, 21, 21, 44, 31, 31, 63, 73, 21, 54};
-        Integer[] fastCastle2 = {21, 33, 21, 21, 21, 21, 21, 21, 21, 11, 31, 11, 11, 21, 11, 43, 53, 11, 21, 21, 21, 44, 21, 21, 21, 63, 21, 21, 21, 73, 21, 31, 54}; //867
-        Integer[] fastCastle3 = {11, 21, 33, 21, 21, 11, 21, 21, 21, 11, 21, 21, 31, 21, 21, 43, 21, 53, 44, 11, 21, 11, 21, 21, 21, 21, 21, 21, 21, 21, 63, 73, 31, 54};
-        Integer[] fastCastle4 = {11, 21, 21, 11, 21, 21, 21, 21, 11, 21, 21, 11, 21, 33, 21, 21, 43, 53, 44, 21, 31, 21, 21, 21, 21, 31, 21, 21, 21, 21, 63, 73, 21, 21, 54};//826
-        Integer[] fastCastle5 = {11, 21, 21, 11, 21, 21, 21, 21, 11, 21, 21, 11, 21, 33, 21, 21, 43, 53, 44, 31, 21, 21, 21, 31, 21, 21, 21, 21, 21, 63, 11, 11, 73, 54}; //956
-        Integer[] fastCastle6 = {21, 21, 21, 21, 21, 11, 11, 21, 21, 21, 21, 33, 21, 21, 21, 21, 43, 11, 21, 21, 21, 21, 11, 21, 11, 21, 21, 21, 21, 53, 21, 21, 21, 31, 21, 21, 21, 31, 21, 44, 21, 21, 21, 11, 63, 73, 21, 54}; //815
-        Integer[] fastCastle7 = {21, 21, 21, 21, 11, 21, 11, 11, 21, 21, 33, 11, 31, 21, 21, 21, 21, 21, 21, 21, 21, 43, 21, 21, 21, 53, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 44, 21, 63, 21, 21, 11, 21, 21, 73, 54}; //678
-        Integer[] asd1 = {11, 21, 33, 21, 21, 21, 21, 11, 21, 21, 11, 11, 21, 21, 43, 21, 31, 21, 21, 21, 21, 21, 21, 53, 21, 11, 21, 44, 16, 21, 63, 21, 73, 31, 31, 54};
-        Integer[] fcfarms = {21, 11, 33, 21, 21, 21, 11, 11, 21, 21, 21, 21, 31, 21, 11, 21, 43, 21, 21, 53, 21, 21, 21, 16, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 44, 63, 73, 21, 21, 21, 21, 21, 21, 54}; //676
-        Integer[] fi = {11, 21, 21, 21, 21, 21, 21, 11, 21, 33, 11, 11, 21, 21, 21, 21, 21, 43, 21, 11, 21, 21, 21, 21, 53, 11, 11, 11, 16, 21, 31, 21, 21, 21, 21, 31, 21, 21, 31, 21, 31, 31, 11, 21, 31, 21, 44, 31, 21, 21, 63, 31, 31, 21, 73, 54, 73, 21, 41, 73, 64}; //745
-        Integer[] fi2 = {11, 21, 11, 21, 21, 33, 21, 21, 11, 11, 11, 11, 21, 21, 31, 11, 31, 21, 21, 31, 21, 21, 21, 43, 21, 21, 31, 53, 16, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 31, 11, 44, 21, 31, 31, 63, 21, 73, 54, 11, 73, 11, 73, 41, 11, 64};
+        Integer[] thirteen = { 21, 21, 21, 11, 21, 21, 11, 21, 21, 21, 21, 21, 31, 23, 22, 22, 22, 31, 22, 22, 22, 22,
+                31, 21, 31, 31, 21, 21, 21, 22, 22, 21, 22, 22, 22, 22 };
+        Integer[] thirteen2 = { 21, 11, 21, 31, 21, 21, 11, 21, 21, 21, 21, 21, 23, 22, 31, 22, 22, 22, 22, 22, 31, 22,
+                22, 22, 22, 22, 22, 31, 31, 22 };
+        Integer[] thirteen3 = { 21, 11, 21, 21, 21, 31, 11, 21, 21, 21, 21, 21, 23, 22, 21, 22, 22, 31, 22, 22, 22, 22,
+                22, 22, 31, 21, 21, 21, 31, 21, 21, 31, 22, 21, 22, 22, 22 };
+        Integer[] fastFedual = { 21, 21, 21, 11, 21, 21, 21, 21, 21, 21, 33, 21, 21, 21, 21, 11, 11, 11, 43, 44 };
+        Integer[] fastFeudal2 = { 11, 21, 21, 21, 21, 21, 21, 33, 11, 43, 44 };
+        Integer[] fastFeudal3 = { 21, 21, 21, 21, 11, 33, 11, 21, 21, 43, 44 };
+        Integer[] fastCastle = { 21, 11, 21, 21, 11, 21, 21, 21, 33, 21, 21, 21, 21, 21, 43, 11, 53, 21, 21, 11, 11, 21,
+                11, 21, 21, 21, 44, 31, 31, 63, 73, 21, 54 };
+        Integer[] fastCastle2 = { 21, 33, 21, 21, 21, 21, 21, 21, 21, 11, 31, 11, 11, 21, 11, 43, 53, 11, 21, 21, 21,
+                44, 21, 21, 21, 63, 21, 21, 21, 73, 21, 31, 54 }; // 867
+        Integer[] fastCastle3 = { 11, 21, 33, 21, 21, 11, 21, 21, 21, 11, 21, 21, 31, 21, 21, 43, 21, 53, 44, 11, 21,
+                11, 21, 21, 21, 21, 21, 21, 21, 21, 63, 73, 31, 54 };
+        Integer[] fastCastle4 = { 11, 21, 21, 11, 21, 21, 21, 21, 11, 21, 21, 11, 21, 33, 21, 21, 43, 53, 44, 21, 31,
+                21, 21, 21, 21, 31, 21, 21, 21, 21, 63, 73, 21, 21, 54 };// 826
+        Integer[] fastCastle5 = { 11, 21, 21, 11, 21, 21, 21, 21, 11, 21, 21, 11, 21, 33, 21, 21, 43, 53, 44, 31, 21,
+                21, 21, 31, 21, 21, 21, 21, 21, 63, 11, 11, 73, 54 }; // 956
+        Integer[] fastCastle6 = { 21, 21, 21, 21, 21, 11, 11, 21, 21, 21, 21, 33, 21, 21, 21, 21, 43, 11, 21, 21, 21,
+                21, 11, 21, 11, 21, 21, 21, 21, 53, 21, 21, 21, 31, 21, 21, 21, 31, 21, 44, 21, 21, 21, 11, 63, 73, 21,
+                54 }; // 815
+        Integer[] fastCastle7 = { 21, 21, 21, 21, 11, 21, 11, 11, 21, 21, 33, 11, 31, 21, 21, 21, 21, 21, 21, 21, 21,
+                43, 21, 21, 21, 53, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 44, 21, 63, 21, 21, 11, 21, 21, 73,
+                54 }; // 678
+        Integer[] asd1 = { 11, 21, 33, 21, 21, 21, 21, 11, 21, 21, 11, 11, 21, 21, 43, 21, 31, 21, 21, 21, 21, 21, 21,
+                53, 21, 11, 21, 44, 16, 21, 63, 21, 73, 31, 31, 54 };
+        Integer[] fcfarms = { 21, 11, 33, 21, 21, 21, 11, 11, 21, 21, 21, 21, 31, 21, 11, 21, 43, 21, 21, 53, 21, 21,
+                21, 16, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 44, 63, 73, 21, 21, 21, 21, 21, 21, 54 }; // 676
+        Integer[] fi = { 11, 21, 21, 21, 21, 21, 21, 11, 21, 33, 11, 11, 21, 21, 21, 21, 21, 43, 21, 11, 21, 21, 21, 21,
+                53, 11, 11, 11, 16, 21, 31, 21, 21, 21, 21, 31, 21, 21, 31, 21, 31, 31, 11, 21, 31, 21, 44, 31, 21, 21,
+                63, 31, 31, 21, 73, 54, 73, 21, 41, 73, 64 }; // 745
+        Integer[] fi2 = { 11, 21, 11, 21, 21, 33, 21, 21, 11, 11, 11, 11, 21, 21, 31, 11, 31, 21, 21, 31, 21, 21, 21,
+                43, 21, 21, 31, 53, 16, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 31, 11, 44, 21, 31, 31, 63, 21,
+                73, 54, 11, 73, 11, 73, 41, 11, 64 };
         ArrayList<Integer> bo = new ArrayList<>();
         Collections.addAll(bo, fi2);
         LookUp lookUpTable = new LookUp();
         TechTree techTree = new TechTree();
         ArrayList<Building> buildings = new ArrayList<>();
         buildings.add(techTree.TownCenter);
-        gameRules gameRules1 = new gameRules(100, 200, 100, 100, 200, 0, 3, buildings); //wood, food, gold, stone, maxpop, startingvils
-        SimulationMaintained simulation = new SimulationMaintained(gameRules1, techTree, createNewResources());
-        SimulationMaintained simulationWithGraphdata = new SimulationMaintained(gameRules1, techTree, createNewResources());
+        GameRules gameRules = new GameRules(100, 200, 100, 100, 200, 0, 3, buildings); // wood, food, gold, stone,
+                                                                                        // maxpop, startingvils
+        SimulationMaintained simulation = new SimulationMaintained(gameRules, techTree, createNewResources());
+        SimulationMaintained simulationWithGraphdata = new SimulationMaintained(gameRules, techTree,
+                createNewResources());
         GraphData data = simulationWithGraphdata.RunGD(bo, maxEstimatedTime);
 
         LineChart.run(data);
@@ -86,7 +120,8 @@ public class AOKBO {
         ArrayList<Building> buildings = new ArrayList<>();
         ArrayList<Resource> resources = new ArrayList<>();
         buildings.add(techTree.TownCenter);
-        gameRules gameRules1 = new gameRules(100, 200, 100, 100, 200, 0, 3, buildings); //wood, food, gold, stone, maxpop, startingvils
+        GameRules gameRules = new GameRules(100, 200, 100, 100, 200, 0, 3, buildings); // wood, food, gold, stone,
+                                                                                       // maxpop, startingvils
         ArrayList<Integer> fastCastleBO = new ArrayList();
         ArrayList<Integer> threeMilitia = new ArrayList();
         ArrayList<Integer> feudalRush = new ArrayList();
@@ -94,96 +129,116 @@ public class AOKBO {
         ArrayList<Integer> sevenMilitia = new ArrayList();
         ArrayList<Integer> farming = new ArrayList();
 
-        //target is barracks+7militia
-        sevenMilitia.add(23); //build barracks
-        sevenMilitia.add(22); //create militia
-        sevenMilitia.add(22); //create militia
-        sevenMilitia.add(22); //create militia
-        sevenMilitia.add(22); //create militia
-        sevenMilitia.add(22); //create militia
-        sevenMilitia.add(22); //create militia
-        sevenMilitia.add(22); //create militia
-        sevenMilitia.add(22); //create militia
-        sevenMilitia.add(22); //create militia
-        sevenMilitia.add(22); //create militia
-        sevenMilitia.add(22); //create militia
-        sevenMilitia.add(22); //create militia
-        sevenMilitia.add(22); //create militia
+        // target is barracks+7militia
+        sevenMilitia.add(23); // build barracks
+        sevenMilitia.add(22); // create militia
+        sevenMilitia.add(22); // create militia
+        sevenMilitia.add(22); // create militia
+        sevenMilitia.add(22); // create militia
+        sevenMilitia.add(22); // create militia
+        sevenMilitia.add(22); // create militia
+        sevenMilitia.add(22); // create militia
+        sevenMilitia.add(22); // create militia
+        sevenMilitia.add(22); // create militia
+        sevenMilitia.add(22); // create militia
+        sevenMilitia.add(22); // create militia
+        sevenMilitia.add(22); // create militia
+        sevenMilitia.add(22); // create militia
 
-        //Standard fast castle order
-        fastCastleBO.add(33); //build lumber camp
-        fastCastleBO.add(43); //Build mill
-        fastCastleBO.add(53); //Build mining Camp
-        fastCastleBO.add(44); //Feudal age research
-        fastCastleBO.add(63); //Build blacksmith
-        fastCastleBO.add(73); //Build Market
-        fastCastleBO.add(54); //Castle Age research
+        // Standard fast castle order
+        fastCastleBO.add(33); // build lumber camp
+        fastCastleBO.add(43); // Build mill
+        fastCastleBO.add(53); // Build mining Camp
+        fastCastleBO.add(44); // Feudal age research
+        fastCastleBO.add(63); // Build blacksmith
+        fastCastleBO.add(73); // Build Market
+        fastCastleBO.add(54); // Castle Age research
 
-        //target is barracks+3militia
-        threeMilitia.add(23); //build barracks
-        threeMilitia.add(22); //create militia
-        threeMilitia.add(22); //create militia
-        threeMilitia.add(22); //create militia
+        // target is barracks+3militia
+        threeMilitia.add(23); // build barracks
+        threeMilitia.add(22); // create militia
+        threeMilitia.add(22); // create militia
+        threeMilitia.add(22); // create militia
 
-        feudalRush.add(33); //build lumber camp
-        feudalRush.add(43); //build mill
-        feudalRush.add(44); //feudal age research
+        feudalRush.add(33); // build lumber camp
+        feudalRush.add(43); // build mill
+        feudalRush.add(44); // feudal age research
 
-        fastImperial.add(33); //build lumber camp
-        fastImperial.add(43); //Build mill
-        fastImperial.add(53); //Build mining Camp
-        fastImperial.add(16); //enable farming
-        fastImperial.add(44); //Feudal age research
-        fastImperial.add(63); //Build blacksmith
-        fastImperial.add(73); //Build Market
-        fastImperial.add(54); //Castle Age research
-        fastImperial.add(73); //Build Market
-        fastImperial.add(73); //Build Market
-        fastImperial.add(64); //imp
+        fastImperial.add(33); // build lumber camp
+        fastImperial.add(43); // Build mill
+        fastImperial.add(53); // Build mining Camp
+        fastImperial.add(16); // enable farming
+        fastImperial.add(44); // Feudal age research
+        fastImperial.add(63); // Build blacksmith
+        fastImperial.add(73); // Build Market
+        fastImperial.add(54); // Castle Age research
+        fastImperial.add(73); // Build Market
+        fastImperial.add(73); // Build Market
+        fastImperial.add(64); // imp
 
-        farming.add(33); //build lumber camp
-        farming.add(43); //Build mill
-        farming.add(53); //Build mining Camp
-        farming.add(44); //Feudal age research
-        farming.add(16); //enable farming
-        farming.add(63); //Build blacksmith
-        farming.add(73); //Build Market
-        farming.add(54); //Castle Age research
+        farming.add(33); // build lumber camp
+        farming.add(43); // Build mill
+        farming.add(53); // Build mining Camp
+        farming.add(44); // Feudal age research
+        farming.add(16); // enable farming
+        farming.add(63); // Build blacksmith
+        farming.add(73); // Build Market
+        farming.add(54); // Castle Age research
 
-        GeneticAlgorithm.gameRule = gameRules1;
-        GeneticAlgorithm.techTree = techTree;
+        // initialize GeneticAlgorithm here
+
+        int numberOfGenerations = 1000;
+        int populationSize = 100;
+        int targetsize = 120;
+        int numberOfGenes = 90;
+        double mutationRate = 0.05;
+        double mutationGrowRate = 0.05;
+        int numberOfEliteChromosomes = 2;
+        int numberOfSemiEliteChromosomes = 15;
+        int tournamentSelectionSize = 2;
+        int maxEstimatedTime = 3000;
         Chromosome.targetPrerequisites = fastImperial;
         int generationNumber = 0;
-        GeneticAlgorithm.currentGeneration = generationNumber;
+
+        //initialing options
+        Options geneticOptions = Options.getOptions();
+        geneticOptions.setOptions(numberOfGenerations, populationSize, targetsize,
+        numberOfGenes, mutationRate, mutationGrowRate, numberOfEliteChromosomes, numberOfSemiEliteChromosomes,
+        tournamentSelectionSize, maxEstimatedTime, gameRules, techTree);
+
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
 
         ArrayList<Integer> bestChromosomes = new ArrayList<>();
         ArrayList<Chromosome> bestChromosomesList = new ArrayList<>();
 
-        //here the genetic algorithm side starts.
-        Population population = new Population(GeneticAlgorithm.POPULATION_SIZE).initializePopulation();
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
+        // here the genetic algorithm side starts.
+        Population population = new Population(populationSize).initializePopulation(targetsize, maxEstimatedTime, numberOfEliteChromosomes, numberOfSemiEliteChromosomes);
+
         System.out.println("-----------------------------------------------");
-        System.out.println("Generation #0 " + " | Fittest chromosome fitness: "
-                + (population.getChromosomes()[0].getFitness()));
+        System.out.println(
+                "Generation #0 " + " | Fittest chromosome fitness: " + (population.getChromosomes()[0].getFitness()));
         System.out.println("" + population.getChromosomes()[0].toString());
 
         bestChromosomes.add(population.getChromosomes()[0].getFitness());
         bestChromosomesList.add(population.getChromosomes()[0]);
 
-        while (GeneticAlgorithm.currentGeneration < GeneticAlgorithm.NUMBER_OF_GENERATIONS) {
+        while (geneticAlgorithm.getCurrentGeneration() < numberOfGenerations) {
             generationNumber++;
-            GeneticAlgorithm.currentGeneration = generationNumber;
-            //GeneticAlgorithm.MUTATION_RATE = GeneticAlgorithm.currentGeneration * GeneticAlgorithm.MUTATION_GROW_RATE;
+            geneticAlgorithm.setCurrentGeneration(generationNumber);
+            // GeneticAlgorithm.MUTATION_RATE = GeneticAlgorithm.currentGeneration *
+            // GeneticAlgorithm.MUTATION_GROW_RATE;
             System.out.println("\n------------------------------------------------");
             population = geneticAlgorithm.evolve(population);
-            //population.sortChromosomeByFitness();
+            // population.sortChromosomeByFitness();
             System.out.println("-----------------------------------------------");
-            //GeneticAlgorithm.NUMB_OF_ELITE_CHROMOSOMES + GeneticAlgorithm.NUMB_OF_SEMIELITE_CHROMOSOMES
-            for (int i = 0; i < GeneticAlgorithm.NUMB_OF_ELITE_CHROMOSOMES; i++) {
+            // numberOfEliteChromosomes +
+            // GeneticAlgorithm.NUMB_OF_SEMIELITE_CHROMOSOMES
+            for (int i = 0; i < numberOfEliteChromosomes; i++) {
                 System.out.println("Generation # " + generationNumber + " | Fittest chromosome fitness: "
                         + (population.getChromosomes()[i].getFitness()));
                 System.out.println("" + population.getChromosomes()[i].toString());
-                //System.out.println("" + lookUpTable.convert(population.getChromosomes()[i].getGenes()));
+                // System.out.println("" +
+                // lookUpTable.convert(population.getChromosomes()[i].getGenes()));
             }
             // if (generationNumber % 5 == 0) {
             bestChromosomes.add(population.getChromosomes()[0].getFitness());
@@ -192,7 +247,7 @@ public class AOKBO {
 
         }
 
-        for (int i = 0; i < GeneticAlgorithm.NUMB_OF_ELITE_CHROMOSOMES; i++) {
+        for (int i = 0; i < numberOfEliteChromosomes; i++) {
             System.out.println("Generation # " + generationNumber + " | Fittest chromosome fitness: "
                     + (population.getChromosomes()[i].getFitness()));
             System.out.println("" + population.getChromosomes()[i].toString());
@@ -218,14 +273,14 @@ public class AOKBO {
         ArrayList<Building> buildings = new ArrayList<>();
         ArrayList<Resource> resources = new ArrayList<>();
         buildings.add(techTree.TownCenter);
-        gameRules gameRules1 = new gameRules(100, 200, 100, 100, 200, 0, 3, buildings);
+        GameRules gameRules1 = new GameRules(100, 200, 100, 100, 200, 0, 3, buildings);
         resources.add(new Resource(2, "Hunt without mill1", 0.408f, 30, 1600, 35, 0));
         resources.add(new Resource(2, "Berry", 0.310f, 30, 800, 10, 8));
         resources.add(new Resource(2, "Sheep", 0.330f, 30, 1600, 10, 0));
         resources.add(new Resource(1, "Wood", 0.310f, 30, 5000, 10, 8));
         resources.add(new Resource(3, "Gold", 0.330f, 30, 3000, 10, 10));
         resources.add(new Resource(4, "Stone", 0.330f, 30, 3000, 10, 10));
-        Simulation firstSimulation = new Simulation(gameRules1, techTree, resources);
+        SimulationMaintained firstSimulation = new SimulationMaintained(gameRules1, techTree, resources);
         ArrayList<Integer> buildOrder = new ArrayList();
         ArrayList<Integer> feudalRush = new ArrayList<>();
         buildOrder.add(21);
@@ -538,7 +593,7 @@ public class AOKBO {
             totalFood += Berry1.clockWork();
             System.out.println(inGameSecond + ":ingameSecond -> " + totalFood);
         }
-        System.out.println("Total resource left on berry1 = " + Berry1.totalResourceLeft);
+        System.out.println("Total resource left on berry1 = " + Berry1.getTotalResourceLeft());
         totalFood = 0;
         for (int i = 0; i < vilList.size(); i++) {
             Berry2.addWorker(vilList.get(i));
@@ -552,7 +607,7 @@ public class AOKBO {
             System.out.println(inGameSecond + ":ingameSecond -> " + totalFood);
         }
 
-        System.out.println("Total resource left on berry2 = " + Berry2.totalResourceLeft);
+        System.out.println("Total resource left on berry2 = " + Berry2.getTotalResourceLeft());
     }
 
     public static void tryCaseResourcesAddVilsByTime() {
@@ -582,7 +637,7 @@ public class AOKBO {
             totalFood += BerryAllTogether.clockWork();
             System.out.println(inGameSecond + ":ingameSecond -> " + totalFood);
         }
-        System.out.println("Total resource left on BerryAllTogether = " + BerryAllTogether.totalResourceLeft);
+        System.out.println("Total resource left on BerryAllTogether = " + BerryAllTogether.getTotalResourceLeft());
 
         BerryOneByOne.addBuilding(Mill1);
         totalFood = 0;
@@ -599,7 +654,7 @@ public class AOKBO {
             System.out.println(inGameSecond + ":ingameSecond -> " + totalFood);
         }
 
-        System.out.println("Total resource left on BerryOneByOne = " + BerryOneByOne.totalResourceLeft);
+        System.out.println("Total resource left on BerryOneByOne = " + BerryOneByOne.getTotalResourceLeft());
     }
 
 }

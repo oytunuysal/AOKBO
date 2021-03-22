@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aokbo;
+package aokbo.simulation;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,7 +15,7 @@ import java.util.Iterator;
 public class Research extends baseGameItem {
 
     //a list with both upgrade type and gatherRateFactor. This way a reseach can change more than one attribute.
-    ArrayList<UpgradeAffect> upgradeAffects;
+    private ArrayList<UpgradeAffect> upgradeAffects;
 
     /*
     0-non eco(do I even need it now ?)
@@ -29,7 +29,7 @@ public class Research extends baseGameItem {
     }
 
     public void addUpgradeAffect(int resourceType, int type, int factor) { //factor is actually float..
-        upgradeAffects.add(new UpgradeAffect(resourceType, type, factor));
+        this.upgradeAffects.add(new UpgradeAffect(resourceType, type, factor));
     }
 
     public void applyResearch(Resource aResource) {
@@ -75,5 +75,13 @@ public class Research extends baseGameItem {
         public int getResourceType(){
             return resourceType;
         }
+    }
+
+    public ArrayList<UpgradeAffect> getUpgradeAffects() {
+        return upgradeAffects;
+    }
+
+    public void setUpgradeAffects(ArrayList<UpgradeAffect> upgradeAffects) {
+        this.upgradeAffects = upgradeAffects;
     }
 }

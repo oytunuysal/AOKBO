@@ -1,7 +1,12 @@
-package aokbo;
+package aokbo.genetic;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import aokbo.AOKBO;
+import aokbo.simulation.GameRules;
+import aokbo.simulation.SimulationMaintained;
+import aokbo.simulation.TechTree;
 
 public class Chromosome {
 
@@ -15,22 +20,25 @@ public class Chromosome {
 //    public static int[] optionalCommands = new int[]{16};
 //    public ArrayList<Integer> optionalIndexes = new ArrayList<>();
 
+    private Options geneticOptions;
+
     Chromosome(int length) {
         //genes = new int[length];
         this.length = length;
         this.genes.ensureCapacity(this.length);
         this.isFitnessChanged = true;
+        this.geneticOptions = Options.getOptions();
     }
 
     void setGenes() {
     }
 
-    ArrayList<Integer> getGenes() {
+    public ArrayList<Integer> getGenes() {
         isFitnessChanged = true;
         return genes;
     }
 
-    int getFitness() {
+    public int getFitness() {
         if (isFitnessChanged) {
             this.fitness = recalculateFitness();
             this.isFitnessChanged = false;
@@ -53,10 +61,10 @@ public class Chromosome {
         int chromosomeFitness = 0;
         //Printing all genes inside the chromosome
         //System.out.println(genes.toString());
-        SimulationMaintained calc = new SimulationMaintained(GeneticAlgorithm.gameRule, GeneticAlgorithm.techTree, AOKBO.createNewResources());
-        chromosomeFitness = calc.Run(genes, GeneticAlgorithm.maxEstimatedTime);
+        SimulationMaintained calc = new SimulationMaintained(geneticOptions.gameRule, geneticOptions.techTree, AOKBO.createNewResources());
+        chromosomeFitness = calc.Run(genes, geneticOptions.maxEstimatedTime);
         if (chromosomeFitness == 0) {
-            chromosomeFitness = GeneticAlgorithm.maxEstimatedTime;
+            chromosomeFitness = geneticOptions.maxEstimatedTime;
         }
         return chromosomeFitness;
     }
@@ -66,7 +74,7 @@ public class Chromosome {
         //create random build orders here
         int prerequisiteSize = targetPrerequisites.size();
         genes.ensureCapacity(this.length);
-        for (int i = 0; i < GeneticAlgorithm.numberOfGenes; i++) { //creates random repeatable commands
+        for (int i = 0; i < geneticOptions.numberOfGenes; i++) { //creates random repeatable commands
             genes.add(repeatableCommands[((int) (Math.random() * 100)) % repeatableCommands.length]);
         }
 

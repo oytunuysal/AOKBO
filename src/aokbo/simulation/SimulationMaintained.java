@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aokbo;
+package aokbo.simulation;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -20,26 +20,26 @@ public class SimulationMaintained {
     private float totalGold;
     private float totalStone;
     private TechTree techTree;
-    ArrayList<Resource> resourceList;
-    Tasker tasker;
-    LinkedList<Unit> villagerList;
-    ArrayList<Building> buildings; // instead of this, I can parse building into Barracks, TCS ect in constuctor.
-    ArrayList<Building> allTCs;
-    int inQ = 0;
-    GraphData data;
-    int population;
-    int vilCount;
-    boolean enableFarms;
-    int currentAge;
-    boolean showPrints;
+    private ArrayList<Resource> resourceList;
+    private Tasker tasker;
+    private LinkedList<Unit> villagerList;
+    private ArrayList<Building> buildings; // instead of this, I can parse building into Barracks, TCS ect in constuctor.
+    private ArrayList<Building> allTCs;
+    private int inQ = 0;
+    private GraphData data;
+    private int population;
+    private int vilCount;
+    private boolean enableFarms;
+    private int currentAge;
+    private boolean showPrints;
 
-    int token = 1; // token = 1 successful. token = 2 ? token = 3 error. token = 4 finished. token = 5 
-    boolean waitForResource = false;
-    int ingameTime = 0;
-    int nextInput1 = 0;
-    int nextInput2 = 0;
+    private int token = 1; // token = 1 successful. token = 2 ? token = 3 error. token = 4 finished. token = 5 
+    private boolean waitForResource = false;
+    private int ingameTime = 0;
+    private int nextInput1 = 0;
+    private int nextInput2 = 0;
 
-    public SimulationMaintained(gameRules rules, TechTree techTree, ArrayList<Resource> resources) {
+    public SimulationMaintained(GameRules rules, TechTree techTree, ArrayList<Resource> resources) {
         this.totalWood = rules.getWood();
         this.totalFood = rules.getFood();
         this.totalGold = rules.getGold();
@@ -61,7 +61,7 @@ public class SimulationMaintained {
         this.buildings = (ArrayList<Building>) rules.startingBuildings.clone();
 
         for (Building tc : buildings) {
-            if (tc.name.contains("TownCenter")) {
+            if (tc.getName().contains("TownCenter")) {
                 this.allTCs.add(tc);
 
             }
@@ -241,9 +241,9 @@ public class SimulationMaintained {
     private void assignEcoBuilding(Building building) {
         float bestGR = 0, temp = 0;
         Resource tempResource = null;
-        if (building.name.contains("Mill")) {
+        if (building.getName().contains("Mill")) {
             for (Resource aResource : resourceList) {
-                if (aResource.sourceType == 2) {
+                if (aResource.getSourceType() == 2) {
                     temp = aResource.differenceAfterBuilding();
                     if (temp > bestGR) {
                         bestGR = temp;
@@ -251,9 +251,9 @@ public class SimulationMaintained {
                     }
                 }
             }
-        } else if (building.name.contains("Lumber Camp")) {
+        } else if (building.getName().contains("Lumber Camp")) {
             for (Resource aResource : resourceList) {
-                if (aResource.sourceType == 1) {
+                if (aResource.getSourceType() == 1) {
                     temp = aResource.differenceAfterBuilding();
                     if (temp > bestGR) {
                         bestGR = temp;
@@ -261,9 +261,9 @@ public class SimulationMaintained {
                     }
                 }
             }
-        } else if (building.name.contains("Mining Camp")) {
+        } else if (building.getName().contains("Mining Camp")) {
             for (Resource aResource : resourceList) {
-                if (aResource.sourceType == 3 || aResource.sourceType == 4) {
+                if (aResource.getSourceType() == 3 || aResource.getSourceType() == 4) {
                     temp = aResource.differenceAfterBuilding();
                     if (temp > bestGR) {
                         bestGR = temp;
@@ -318,13 +318,13 @@ public class SimulationMaintained {
 
     private void timeDependentResearch(Research aResearch) { // if its a research,
         for (Resource aResource : resourceList) {
-            for (Research.UpgradeAffect anAffect : ((Research) aResearch).upgradeAffects) {
+            for (Research.UpgradeAffect anAffect : ((Research) aResearch).getUpgradeAffects()) {
                 if (anAffect.getResourceType() == 0) {
                     ((Research) aResearch).applyResearch(aResource);
                 } else if (anAffect.getResourceType() == aResource.getSourceType()) {
                     aResearch.applyResearch(aResource);
                 } else if (anAffect.getResourceType() == 4) { //age up research
-                    this.currentAge = aResearch.requiredAge + 1;
+                    this.currentAge = aResearch.getRequiredAge() + 1;
                     return;
                 }
             }
@@ -340,7 +340,7 @@ public class SimulationMaintained {
             hasFound = putIntoQueue(buildingName, research);
             if (hasFound) {
                 if (showPrints) {
-                    System.out.println(ingameTime + ": " + research.name);
+                    System.out.println(ingameTime + ": " + research.getName());
                 }
                 return 1;
             } else {
@@ -371,12 +371,12 @@ public class SimulationMaintained {
     }
 
     private int builder(Building techtreeBuilding, boolean isEcoBuilding) {
-        if (hasEnoughResource(techtreeBuilding) && techtreeBuilding.requiredAge <= currentAge) {
+        if (hasEnoughResource(techtreeBuilding) && techtreeBuilding.getRequiredAge() <= currentAge) {
             executeCost(techtreeBuilding);
             Building newBuilding = techtreeBuilding.getNew();
             buildings.add(newBuilding);
             if (showPrints) {
-                System.out.println(ingameTime + ": Building: " + newBuilding.name);
+                System.out.println(ingameTime + ": Building: " + newBuilding.getName());
             }
             //if (buildings != null && !buildings.isEmpty()) {
             if (isEcoBuilding) {
@@ -413,7 +413,7 @@ public class SimulationMaintained {
         Building temp = null;
         int maxq = 100;
         for (Building building : buildings) {
-            if (building.name.contains(name)) {
+            if (building.getName().contains(name)) {
                 if (building.getInQueueCount() < maxq) {
                     temp = building;
                     maxq = building.getInQueueCount();
@@ -447,7 +447,7 @@ public class SimulationMaintained {
                             totalWood += next.clockWork();
                         } else {
                             villagerList.addAll(next.removeAllWorker());
-                            next.hasDepleted = true;
+                            next.depletedResource();
                         }
                         break;
                     case 2:
@@ -455,7 +455,7 @@ public class SimulationMaintained {
                             totalFood += next.clockWork();
                         } else {
                             villagerList.addAll(next.removeAllWorker());
-                            next.hasDepleted = true;
+                            next.depletedResource();
                         }
                         break;
                     case 3:
@@ -463,7 +463,7 @@ public class SimulationMaintained {
                             totalGold += next.clockWork();
                         } else {
                             villagerList.addAll(next.removeAllWorker());
-                            next.hasDepleted = true;
+                            next.depletedResource();
                         }
                         break;
                     case 4:
@@ -471,7 +471,7 @@ public class SimulationMaintained {
                             totalStone += next.clockWork();
                         } else {
                             villagerList.addAll(next.removeAllWorker());
-                            next.hasDepleted = true;
+                            next.depletedResource();
                         }
                         break;
                 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aokbo;
+package aokbo.simulation;
 
 import java.util.ArrayList;
 
@@ -14,48 +14,48 @@ import java.util.ArrayList;
 public class TechTree {
 
     ArrayList<baseGameItem> allGameItems;
-    //implement-> darkage buildings 1 points, fedual 10 (or 15) pts ect ect.
-    //for listing all requirements
+    // implement-> darkage buildings 1 points, fedual 10 (or 15) pts ect ect.
+    // for listing all requirements
     ArrayList<baseGameItem> allReq = new ArrayList<>();
 
-    Research DarkAgeResearch;
-    Building Mill;
-    Building Farm;
-    Building LumberCamp;
-    Building MiningCamp;
-    Building TownCenter;
-    Research Loom;
-    Building Barracks;
-    Research FeudalAgeResearch;
-    Research DoubleBitAxeResearch;
-    Building Blacksmith;
-    Research Fletching;
-    Building Market;
-    Building ArcheryRange;
-    Building Stable;
-    Research CastleAgeResearch;
-    Research BodkinArrow;
-    Building SiegeWorkshop;
-    Research BowSawResearch;
-    Research WheelbarrowResearch;
-    Research ImperialAgeResearch;
+    public Research DarkAgeResearch;
+    public Building Mill;
+    public Building Farm;
+    public Building LumberCamp;
+    public Building MiningCamp;
+    public Building TownCenter;
+    public Research Loom;
+    public Building Barracks;
+    public Research FeudalAgeResearch;
+    public Research DoubleBitAxeResearch;
+    public Building Blacksmith;
+    public Research Fletching;
+    public Building Market;
+    public Building ArcheryRange;
+    public Building Stable;
+    public Research CastleAgeResearch;
+    public Research BodkinArrow;
+    public Building SiegeWorkshop;
+    public Research BowSawResearch;
+    public Research WheelbarrowResearch;
+    public Research ImperialAgeResearch;
 
-    Unit Villager;
+    public Unit Villager;
 
-    Unit MilitiaLine;
-    Research ManAtArms;
-    Research LongswordsMan;
+    public Unit MilitiaLine;
+    public Research ManAtArms;
+    public Research LongswordsMan;
 
     public TechTree() {
         allGameItems = new ArrayList<>();
 
-        //all researches, buildings and units
+        // all researches, buildings and units
         DarkAgeResearch = new Research("DarkAgeResearch", 0, 0, 0, 0, 0, 0);
         allGameItems.add(DarkAgeResearch);
 
         Mill = new Building("Mill", 0, 100, 0, 0, 0, 35);
         allGameItems.add(Mill);
-        
+
         Farm = new Building("Farm", 0, 60, 0, 0, 0, 15);
         allGameItems.add(Farm);
         Farm.addPreRequisites(Mill);
@@ -91,7 +91,7 @@ public class TechTree {
         ManAtArms.addPreRequisites(Barracks);
         allGameItems.add(ManAtArms);
 
-        DoubleBitAxeResearch = new Research("Double-Bit Axe", 100, 50, 0, 0, 1, 25); //20% as template
+        DoubleBitAxeResearch = new Research("Double-Bit Axe", 100, 50, 0, 0, 1, 25); // 20% as template
         DoubleBitAxeResearch.addPreRequisites(FeudalAgeResearch);
         DoubleBitAxeResearch.addPreRequisites(LumberCamp);
         DoubleBitAxeResearch.addUpgradeAffect(1, 1, 20);
@@ -99,8 +99,8 @@ public class TechTree {
         WheelbarrowResearch = new Research("Wheelbarrow", 175, 50, 0, 0, 1, 75);
         WheelbarrowResearch.addPreRequisites(FeudalAgeResearch);
         WheelbarrowResearch.addPreRequisites(TownCenter);
-        WheelbarrowResearch.addUpgradeAffect(0, 3, 25); //carry cap
-        WheelbarrowResearch.addUpgradeAffect(0, 2, 10); //movement speed
+        WheelbarrowResearch.addUpgradeAffect(0, 3, 25); // carry cap
+        WheelbarrowResearch.addUpgradeAffect(0, 2, 10); // movement speed
 
         Blacksmith = new Building("Blacksmith", 0, 150, 0, 0, 1, 40);
         Blacksmith.addPreRequisites(FeudalAgeResearch);
@@ -160,27 +160,25 @@ public class TechTree {
         Villager = new Unit("Vil", 50, 0, 0, 0, 25, 0.8f, 10);
         Villager.addPreRequisites(TownCenter);
         allGameItems.add(Villager);
-        
+
         ImperialAgeResearch = new Research("ImperialAgeResearch", 1000, 0, 800, 0, 0, 190);
         ImperialAgeResearch.addPreRequisites(TownCenter);
         allGameItems.add(ImperialAgeResearch);
         ImperialAgeResearch.addUpgradeAffect(4, 0, 3);
 
-        //...
+        // ...
         TownCenter.addPreRequisites(CastleAgeResearch);
 
-        //Listing all items and prerequisites
+        // Listing all items and prerequisites
         for (int i = 0; i < allGameItems.size(); i++) {
             System.out.println(allGameItems.get(i).getName());
             allGameItems.get(i).listPrerequisiteNames();
         }
 
-
         System.out.println();
         System.out.println();
         System.out.println();
         System.out.println();
-
 
     }
 
@@ -188,11 +186,12 @@ public class TechTree {
         allReq.clear();
     }
 
-    //Lists all requirements
+    // Lists all requirements
     public void listingAllReq(baseGameItem target) {
         for (int i = 0; i < target.getPrerequisites().size(); i++) {
-            //System.out.println(target.getPrerequisiteName(i));
-            if (!allReq.contains(target.getPrerequisites().get(i))) { //put target.getPrerequisites().get(i)) into a variable
+            // System.out.println(target.getPrerequisiteName(i));
+            if (!allReq.contains(target.getPrerequisites().get(i))) { // put target.getPrerequisites().get(i)) into a
+                                                                      // variable
                 allReq.add((baseGameItem) target.getPrerequisites().get(i));
                 System.out.println(target.getPrerequisiteName(i));
                 listingAllReq((baseGameItem) target.getPrerequisites().get(i));
@@ -203,7 +202,7 @@ public class TechTree {
     public void totalStoneCost(baseGameItem target) {
         int temp = 0;
         for (baseGameItem targetCost : allReq) {
-            temp += targetCost.requiredStone;
+            temp += targetCost.getRequiredStone();
         }
         System.out.println(temp);
     }
@@ -211,7 +210,7 @@ public class TechTree {
     public void totalGoldCost(baseGameItem target) {
         int temp = 0;
         for (baseGameItem targetCost : allReq) {
-            temp += targetCost.requiredGold;
+            temp += targetCost.getRequiredGold();
         }
         System.out.println(temp);
     }
@@ -219,7 +218,7 @@ public class TechTree {
     public void totalFoodCost(baseGameItem target) {
         int temp = 0;
         for (baseGameItem targetCost : allReq) {
-            temp += targetCost.requiredFood;
+            temp += targetCost.getRequiredFood();
         }
         System.out.println(temp);
     }
@@ -227,19 +226,19 @@ public class TechTree {
     public void totalWoodCost(baseGameItem target) {
         int temp = 0;
         for (baseGameItem targetCost : allReq) {
-            temp += targetCost.requiredWood;
+            temp += targetCost.getRequiredWood();
         }
         System.out.println(temp);
     }
 
     private int cost(baseGameItem anItem) {
-        return anItem.requiredWood;
+        return anItem.getRequiredWood();
     }
 
     public void listingAllReqbyName(String targetName) {
 
         for (baseGameItem target : allGameItems) {
-            if (target.name.equals(targetName)) {
+            if (target.getName().equals(targetName)) {
                 listingAllReq(target);
             }
         }

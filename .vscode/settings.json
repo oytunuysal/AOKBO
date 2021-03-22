@@ -1,0 +1,14 @@
+{
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar",
+            "g:\\Libraries\\jfreechart-1.0.19.jar",
+            "g:\\Libraries\\jfreechart-1.0.19-experimental.jar",
+            "g:\\Libraries\\jfreechart-1.0.19-swt.jar",
+            "g:\\Libraries\\jcommon-1.0.23.jar"
+        ],
+        "exclude": [
+            "g:\\Libraries\\jfreechart-demo-1.5.2-jar-with-dependencies.jar"
+        ]
+    }
+}

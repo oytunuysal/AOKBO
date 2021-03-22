@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aokbo;
+package aokbo.simulation;
 
 import java.util.ArrayList;
 
@@ -88,9 +88,11 @@ public class GraphData {
     public void addPop(int amount) {
         this.population.add(amount);
     }
+
     public void addVillagerCount(int amount) {
         this.villagerCount.add(amount);
     }
+
     public void addIdleVillagerCount(int amount) {
         this.idleVillagerCount.add(amount);
     }

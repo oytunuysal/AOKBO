@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aokbo;
+package aokbo.simulation;
 
 import java.util.ArrayList;
 
@@ -13,24 +13,24 @@ import java.util.ArrayList;
  */
 public class Resource {
 
-    boolean state = true;
-    public boolean hasDepleted = false;
-    String name;
-    int sourceType;
-    float finalGatherRate;
-    float gatherRate; // gatherrate/second
-    float baseGatherRate;  //never changes
-    float distanceGatherPoint;
-    float walkingDistanceFactor; // a number between 0-1.
-    boolean dropOffBuilding;
-    Building assignedBuilding; // maybe an arraylist for here
-    ArrayList<Unit> workerArrayList;
-    int currentWorkerNumber;
-    int maxWorkerSlot;
-    float totalResourceLeft;
-    float resourcesProduced;
-    int baseCarryCapacity;
-    int carryCapacity;
+    private boolean state = true;
+    private boolean hasDepleted = false;
+    private String name;
+    private int sourceType;
+    private float finalGatherRate;
+    private float gatherRate; // gatherrate/second
+    private float baseGatherRate;  //never changes
+    private float distanceGatherPoint;
+    private float walkingDistanceFactor; // a number between 0-1.
+    private boolean dropOffBuilding;
+    private Building assignedBuilding; // maybe an arraylist for here
+    private ArrayList<Unit> workerArrayList;
+    private int currentWorkerNumber;
+    private int maxWorkerSlot;
+    private float totalResourceLeft;
+    private float resourcesProduced;
+    private int baseCarryCapacity;
+    private int carryCapacity;
     // havent implemented deploy time for new vils yet
     //farms missing
     //ingame reveal/scout time(for example it will take some time to find boars ingame)
@@ -78,6 +78,21 @@ public class Resource {
         calculateFinalGatherRate();
     }
 
+    public String getName(){
+        return name;
+    }
+
+    public int getCurrentWorkerNumber() {
+        return currentWorkerNumber;
+    }
+    public int getMaxWorkerSlot() {
+        return maxWorkerSlot;
+    }
+
+    public float getTotalResourceLeft() {
+        return totalResourceLeft;
+    }
+
     public boolean currentState() {
         return state;
     }
@@ -92,6 +107,10 @@ public class Resource {
 
     public int getSourceType() {
         return sourceType;
+    }
+
+    public void depletedResource(){
+        this.hasDepleted = true;
     }
 
     public void changeWalkingDistanceFactor(float factor) {
@@ -135,6 +154,7 @@ public class Resource {
         return tempList;
     }
 
+    //Returns gather rate difference between with and without Eco Building
     public float differenceAfterBuilding() {
         float resourcePerVil, time, newGRwithoutECO, newGRwithECO;
         int currentWorkerNumber;
@@ -150,7 +170,7 @@ public class Resource {
 //
 //        resourcePerVil = totalResourceLeft / (currentWorkerNumber);
 //        time = resourcePerVil / finalGatherRate;
-//         time += 1 / walkingDistanceFactor; //deploy time
+//        time += 1 / walkingDistanceFactor; //deploy time
 //        newGRwithECO = resourcePerVil / time;
         newGRwithoutECO = carryCapacity / (walkingTime() + (carryCapacity / gatherRate));
         newGRwithECO = carryCapacity / (1 + (carryCapacity / gatherRate));
@@ -170,7 +190,7 @@ public class Resource {
                 resourcesProduced += totalResourceLeft;
                 state = false;
                 totalResourceLeft = 0;
-                //System.out.println(name + " depleted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                //System.out.println(name + " depleted!");
             }
             //if total resources left becomes 0 or negative, call a function the inform.
             return resourcesProduced;
@@ -179,5 +199,4 @@ public class Resource {
         }
 
     }
-
 }

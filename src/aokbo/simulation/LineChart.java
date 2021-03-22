@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aokbo;
+package aokbo.simulation;
 
 /**
  *
@@ -80,7 +80,7 @@ public class LineChart extends ApplicationFrame {
         }
     }
 
-    public static void run(ArrayList arrayList) {
+    public static void run(ArrayList<Integer> arrayList) {
         LineChart chart = new LineChart(
                 "Generations/fitness",
                 "Generations/fitness", arrayList);

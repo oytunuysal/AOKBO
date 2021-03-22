@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aokbo;
+package aokbo.simulation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,7 +51,7 @@ public class Tasker { //This is a sort of adapter class.
         float max = 0;
         float newGR; //new gather rate
         for (Resource next : allResources) {
-            if (next.sourceType == type && next.currentWorkerNumber < next.maxWorkerSlot) {
+            if (next.getSourceType() == type && next.getCurrentWorkerNumber() < next.getMaxWorkerSlot()) {
                 newGR = calculateGR(next);
                 if (newGR > max) {
                     max = newGR;
@@ -61,7 +61,7 @@ public class Tasker { //This is a sort of adapter class.
         }
         //if maxGR<farmingGR make farm and work on farm. 
         if (temp != null && print == true) {
-            System.out.println("newGR = " + max + " Name = " + temp.name);
+            System.out.println("newGR = " + max + " Name = " + temp.getName());
 //            System.out.println("Walking time = " + temp.walkingTime());
         }
 
@@ -72,8 +72,8 @@ public class Tasker { //This is a sort of adapter class.
         float time;
         float resourcePerVil;
 
-        resourcePerVil = next.totalResourceLeft / (next.currentWorkerNumber + 1);
-        time = resourcePerVil / next.finalGatherRate;
+        resourcePerVil = next.getTotalResourceLeft() / (next.getCurrentWorkerNumber() + 1);
+        time = resourcePerVil / next.getFinalGatherRate();
         //time += 18; //deploy time
         time += next.walkingTime();
 
@@ -110,7 +110,7 @@ public class Tasker { //This is a sort of adapter class.
 
     public Resource findResource(String name) {
         for (Resource next : allResources) {
-            if (next.name.equalsIgnoreCase(name)) {
+            if (next.getName().equalsIgnoreCase(name)) {
                 return next;
             }
         }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package aokbo;
+package aokbo.simulation;
 
 import java.util.ArrayList;
 
@@ -11,12 +11,12 @@ import java.util.ArrayList;
  *
  * @author Oytun
  */
-public class gameRules {
+public class GameRules {
 
     int food, wood, gold, stone, maxPop, startingAge, startingVilCount;
     ArrayList<Building> startingBuildings;
 
-    public gameRules(int startingWood, int startingFood, int startingGold, int startingStone, int maxPop, int startingAge, int startingVilCount, ArrayList<Building> startingBuildings) {
+    public GameRules(int startingWood, int startingFood, int startingGold, int startingStone, int maxPop, int startingAge, int startingVilCount, ArrayList<Building> startingBuildings) {
         this.food = startingFood;
         this.wood = startingWood;
         this.gold = startingGold;
